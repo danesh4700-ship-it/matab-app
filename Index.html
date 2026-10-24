@@ -1,0 +1,3279 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0d9488">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>پرونده الکترونیک مطب</title>
+<style>
+:root {
+  --primary: #0d9488;
+  --primary-dark: #0f766e;
+  --primary-light: #ccfbf1;
+  --secondary: #0369a1;
+  --danger: #dc2626;
+  --warning: #d97706;
+  --success: #059669;
+  --bg: #f0fdfa;
+  --bg-card: #ffffff;
+  --text: #134e4a;
+  --text-muted: #5eead4;
+  --text-secondary: #64748b;
+  --border: #99f6e4;
+  --shadow: 0 4px 20px rgba(13, 148, 136, 0.12);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --nav-h: 64px;
+  --header-h: 56px;
+}
+[data-theme="dark"] {
+  --primary: #2dd4bf;
+  --primary-dark: #14b8a6;
+  --primary-light: #134e4a;
+  --bg: #0f172a;
+  --bg-card: #1e293b;
+  --text: #e2e8f0;
+  --text-muted: #94a3b8;
+  --text-secondary: #94a3b8;
+  --border: #334155;
+  --shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html { font-size: 16px; }
+body {
+  font-family: 'Vazirmatn', 'Tahoma', 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  padding-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom));
+}
+button, input, select, textarea { font-family: inherit; font-size: 1rem; }
+a { color: var(--primary); text-decoration: none; }
+
+/* Header */
+.app-header {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--primary);
+  color: #fff;
+  height: var(--header-h);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+}
+.app-header h1 { font-size: 1.1rem; font-weight: 700; }
+.header-actions { display: flex; gap: 8px; }
+.icon-btn {
+  background: rgba(255,255,255,0.15); border: none; color: #fff;
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 1.2rem;
+}
+.icon-btn:active { background: rgba(255,255,255,0.3); }
+
+/* Bottom Nav */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  height: calc(var(--nav-h) + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+  display: flex; justify-content: space-around; align-items: center;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+}
+.nav-item {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 2px; padding: 8px 4px;
+  background: none; border: none; color: var(--text-secondary);
+  cursor: pointer; font-size: 0.7rem; transition: color 0.2s;
+}
+.nav-item.active { color: var(--primary); font-weight: 600; }
+.nav-item .nav-icon { font-size: 1.4rem; }
+
+/* Pages */
+.page { display: none; padding: 12px; max-width: 640px; margin: 0 auto; animation: fadeIn 0.25s ease; }
+.page.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* Cards */
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+.card-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 10px; color: var(--primary-dark); display: flex; align-items: center; gap: 8px; }
+.stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
+.stat-card {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: #fff; border-radius: var(--radius-sm); padding: 14px;
+  text-align: center; box-shadow: var(--shadow);
+}
+.stat-card .num { font-size: 1.8rem; font-weight: 800; line-height: 1.2; }
+.stat-card .label { font-size: 0.75rem; opacity: 0.9; margin-top: 4px; }
+.stat-card.alt { background: linear-gradient(135deg, var(--secondary), #0284c7); }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 12px 18px; border: none; border-radius: var(--radius-sm);
+  font-weight: 600; cursor: pointer; transition: all 0.15s; font-size: 0.95rem;
+  min-height: 48px;
+}
+.btn:active { transform: scale(0.97); }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:active { background: var(--primary-dark); }
+.btn-secondary { background: var(--primary-light); color: var(--primary-dark); }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+.btn-block { width: 100%; }
+.btn-sm { padding: 8px 12px; min-height: 36px; font-size: 0.85rem; }
+.btn-group { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+.fab {
+  position: fixed; bottom: calc(var(--nav-h) + 16px + env(safe-area-inset-bottom));
+  left: 16px; z-index: 90;
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--primary); color: #fff; border: none;
+  box-shadow: 0 6px 20px rgba(13,148,136,0.4);
+  font-size: 1.6rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+
+/* Forms */
+.form-group { margin-bottom: 14px; }
+.form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--text); }
+.form-group .hint { font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px; }
+.form-control {
+  width: 100%; padding: 12px 14px; border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm); background: var(--bg);
+  color: var(--text); outline: none; transition: border-color 0.2s;
+  min-height: 48px;
+}
+.form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(13,148,136,0.15); }
+textarea.form-control { min-height: 90px; resize: vertical; }
+select.form-control { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: left 12px center; padding-left: 32px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.checkbox-group { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.checkbox-group input { width: 20px; height: 20px; accent-color: var(--primary); }
+.error-msg { color: var(--danger); font-size: 0.8rem; margin-top: 4px; display: none; }
+.form-control.invalid { border-color: var(--danger); }
+
+/* Patient list / cards */
+.patient-card {
+  display: flex; align-items: center; gap: 12px; padding: 12px;
+  background: var(--bg-card); border-radius: var(--radius-sm);
+  margin-bottom: 8px; border: 1px solid var(--border);
+  cursor: pointer; transition: all 0.15s;
+}
+.patient-card:active { background: var(--primary-light); }
+.patient-avatar {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: var(--primary); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 1.1rem; flex-shrink: 0;
+}
+.patient-info { flex: 1; min-width: 0; }
+.patient-info .name { font-weight: 700; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.patient-info .meta { font-size: 0.78rem; color: var(--text-secondary); }
+.badge {
+  display: inline-block; padding: 2px 8px; border-radius: 20px;
+  font-size: 0.7rem; font-weight: 600;
+}
+.badge-danger { background: #fee2e2; color: #b91c1c; }
+.badge-success { background: #d1fae5; color: #047857; }
+.badge-warning { background: #fef3c7; color: #b45309; }
+.badge-info { background: #e0f2fe; color: #0369a1; }
+
+/* Tabs */
+.tabs { display: flex; gap: 4px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 12px; -webkit-overflow-scrolling: touch; }
+.tab {
+  flex-shrink: 0; padding: 8px 14px; border-radius: 20px;
+  background: var(--bg); border: 1.5px solid var(--border);
+  color: var(--text-secondary); font-size: 0.85rem; font-weight: 600;
+  cursor: pointer; white-space: nowrap;
+}
+.tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+/* Timeline */
+.timeline { position: relative; padding-right: 20px; }
+.timeline::before {
+  content: ''; position: absolute; right: 6px; top: 0; bottom: 0;
+  width: 2px; background: var(--border);
+}
+.timeline-item { position: relative; margin-bottom: 16px; padding-right: 16px; }
+.timeline-item::before {
+  content: ''; position: absolute; right: -2px; top: 8px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--primary); border: 2px solid var(--bg-card);
+}
+.timeline-date { font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 4px; }
+.timeline-content { background: var(--bg); border-radius: var(--radius-sm); padding: 12px; border: 1px solid var(--border); }
+
+/* Modal */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,0.5); display: none;
+  align-items: flex-end; justify-content: center;
+}
+.modal-overlay.show { display: flex; }
+.modal {
+  background: var(--bg-card); border-radius: 20px 20px 0 0;
+  width: 100%; max-width: 640px; max-height: 90vh;
+  overflow-y: auto; padding: 20px; padding-bottom: calc(20px + env(safe-area-inset-bottom));
+  animation: slideUp 0.3s ease;
+}
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: none; } }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.modal-header h2 { font-size: 1.15rem; }
+.modal-close { background: none; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer; width: 40px; height: 40px; }
+
+/* Toast */
+.toast-container { position: fixed; top: 70px; left: 50%; transform: translateX(-50%); z-index: 300; width: 90%; max-width: 360px; }
+.toast {
+  background: #1e293b; color: #fff; padding: 12px 16px; border-radius: var(--radius-sm);
+  margin-bottom: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  animation: toastIn 0.3s ease; display: flex; align-items: center; gap: 10px;
+  font-size: 0.9rem;
+}
+.toast.success { background: var(--success); }
+.toast.error { background: var(--danger); }
+.toast.warning { background: var(--warning); }
+@keyframes toastIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: none; } }
+
+/* Lock Screen */
+#lockScreen {
+  position: fixed; inset: 0; z-index: 9999;
+  background: linear-gradient(160deg, #0d9488, #0f766e, #134e4a);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  color: #fff; padding: 24px;
+}
+#lockScreen.hidden { display: none; }
+.lock-logo { font-size: 3.5rem; margin-bottom: 12px; }
+.lock-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 8px; }
+.lock-sub { opacity: 0.85; margin-bottom: 32px; font-size: 0.9rem; text-align: center; }
+.pin-dots { display: flex; gap: 16px; margin-bottom: 28px; }
+.pin-dot {
+  width: 16px; height: 16px; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.6); background: transparent;
+  transition: all 0.15s;
+}
+.pin-dot.filled { background: #fff; border-color: #fff; }
+.pin-pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 260px; }
+.pin-key {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: rgba(255,255,255,0.15); border: none; color: #fff;
+  font-size: 1.6rem; font-weight: 600; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.pin-key:active { background: rgba(255,255,255,0.35); }
+.pin-error { color: #fca5a5; font-size: 0.9rem; margin-top: 16px; min-height: 24px; }
+
+/* Empty state */
+.empty-state { text-align: center; padding: 40px 20px; color: var(--text-secondary); }
+.empty-state .icon { font-size: 3rem; margin-bottom: 12px; opacity: 0.5; }
+.empty-state p { margin-bottom: 16px; }
+
+/* Search bar */
+.search-bar {
+  display: flex; gap: 8px; margin-bottom: 14px;
+}
+.search-bar input { flex: 1; }
+
+/* Patient header summary */
+.patient-summary {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: #fff; border-radius: var(--radius); padding: 16px; margin-bottom: 14px;
+}
+.patient-summary .ps-name { font-size: 1.25rem; font-weight: 800; }
+.patient-summary .ps-meta { font-size: 0.85rem; opacity: 0.9; margin-top: 4px; }
+.patient-summary .ps-alerts { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+.patient-summary .ps-alerts span {
+  background: rgba(255,255,255,0.2); padding: 3px 10px; border-radius: 12px; font-size: 0.75rem;
+}
+
+/* Print styles */
+@media print {
+  body * { visibility: hidden; }
+  .print-area, .print-area * { visibility: visible; }
+  .print-area { position: absolute; left: 0; top: 0; width: 100%; background: #fff; color: #000; padding: 20px; }
+  .bottom-nav, .app-header, .fab, .no-print { display: none !important; }
+}
+
+/* Loading */
+.loading-overlay {
+  position: fixed; inset: 0; z-index: 500; background: rgba(255,255,255,0.7);
+  display: none; align-items: center; justify-content: center;
+}
+.loading-overlay.show { display: flex; }
+.spinner {
+  width: 40px; height: 40px; border: 3px solid var(--border);
+  border-top-color: var(--primary); border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Section title */
+.section-title { font-size: 1rem; font-weight: 700; margin: 16px 0 10px; color: var(--primary-dark); }
+.divider { height: 1px; background: var(--border); margin: 16px 0; }
+
+/* Chip */
+.chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px 10px; border-radius: 16px; font-size: 0.8rem;
+  background: var(--primary-light); color: var(--primary-dark); margin: 2px;
+}
+.chip .remove { cursor: pointer; font-weight: 700; }
+
+/* Warning banner */
+.warning-banner {
+  background: #fef3c7; color: #92400e; padding: 10px 14px;
+  border-radius: var(--radius-sm); font-size: 0.8rem; margin-bottom: 12px;
+  border: 1px solid #fcd34d; display: flex; gap: 8px; align-items: flex-start;
+}
+[data-theme="dark"] .warning-banner { background: #422006; color: #fbbf24; border-color: #78350f; }
+
+/* File item */
+.file-item {
+  display: flex; align-items: center; gap: 10px; padding: 10px;
+  background: var(--bg); border-radius: var(--radius-sm); margin-bottom: 8px;
+  border: 1px solid var(--border);
+}
+.file-item .file-icon { font-size: 1.5rem; }
+.file-item .file-name { flex: 1; font-size: 0.9rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Calendar mini */
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
+.cal-day-name { font-size: 0.7rem; color: var(--text-secondary); padding: 4px; font-weight: 600; }
+.cal-day {
+  padding: 10px 4px; border-radius: 10px; font-size: 0.9rem; cursor: pointer;
+  min-height: 40px; display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s;
+}
+.cal-day:active { background: var(--primary-light); }
+.cal-day.today { background: var(--primary); color: #fff; font-weight: 700; }
+.cal-day.selected { background: var(--primary-dark); color: #fff; font-weight: 700; box-shadow: 0 2px 8px rgba(13,148,136,0.4); }
+.cal-day.has-event { border: 2px solid var(--primary); }
+.cal-day.other { opacity: 0.35; }
+.cal-day.disabled { opacity: 0.25; pointer-events: none; }
+
+/* Date input with picker button */
+.date-input-wrap {
+  display: flex; gap: 6px; align-items: stretch;
+}
+.date-input-wrap .form-control { flex: 1; }
+.date-input-wrap .date-btn {
+  flex-shrink: 0; width: 48px; min-height: 48px;
+  border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  background: var(--bg); color: var(--primary); font-size: 1.3rem;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+.date-input-wrap .date-btn:active { background: var(--primary-light); }
+
+/* Date picker modal content */
+.dp-header {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; margin-bottom: 14px;
+}
+.dp-header select {
+  flex: 1; padding: 10px 8px; border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm); background: var(--bg); color: var(--text);
+  font-size: 0.95rem; font-weight: 600; min-height: 44px;
+  appearance: none; text-align: center;
+}
+.dp-nav-btn {
+  width: 44px; height: 44px; border-radius: 50%; border: none;
+  background: var(--primary-light); color: var(--primary-dark);
+  font-size: 1.2rem; cursor: pointer; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.dp-nav-btn:active { background: var(--primary); color: #fff; }
+.dp-actions { display: flex; gap: 8px; margin-top: 16px; }
+.dp-actions .btn { flex: 1; }
+.dp-today-label { text-align: center; font-size: 0.8rem; color: var(--text-secondary); margin-top: 10px; }
+
+/* Utility */
+.hidden { display: none !important; }
+.text-center { text-align: center; }
+.text-muted { color: var(--text-secondary); }
+.mt-1 { margin-top: 8px; }
+.mt-2 { margin-top: 16px; }
+.mb-1 { margin-bottom: 8px; }
+.flex { display: flex; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+.gap-1 { gap: 8px; }
+.gap-2 { gap: 12px; }
+.w-full { width: 100%; }
+
+/* Report linear table (in-app) */
+.rep-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  min-width: 560px;
+}
+.rep-table th {
+  background: var(--primary);
+  color: #fff;
+  padding: 8px 6px;
+  border: 1px solid var(--border);
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.rep-table td {
+  padding: 7px 6px;
+  border: 1px solid var(--border);
+  vertical-align: top;
+}
+.rep-table tr:nth-child(even) td { background: var(--bg); }
+.rep-table tr:active td { background: var(--primary-light); }
+.rep-table .rep-link {
+  color: var(--primary);
+  font-weight: 600;
+  cursor: pointer;
+}
+.rep-linear-meta {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+  padding: 8px 10px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+</style>
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<!-- Lock Screen -->
+<div id="lockScreen">
+  <div class="lock-logo">🩺</div>
+  <div class="lock-title">پرونده الکترونیک مطب</div>
+  <div class="lock-sub">برای ورود، رمز عبور خود را وارد کنید</div>
+  <div class="pin-dots" id="pinDots">
+    <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
+    <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
+  </div>
+  <div class="pin-pad" id="pinPad"></div>
+  <div class="pin-error" id="pinError"></div>
+</div>
+
+<!-- Loading -->
+<div class="loading-overlay" id="loadingOverlay"><div class="spinner"></div></div>
+
+<!-- Toast -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Header -->
+<header class="app-header no-print">
+  <button class="icon-btn" id="btnBack" style="display:none" onclick="App.goBack()">→</button>
+  <h1 id="headerTitle">داشبورد</h1>
+  <div class="header-actions">
+    <button class="icon-btn" onclick="App.toggleTheme()" title="حالت تاریک">🌙</button>
+    <button class="icon-btn" onclick="App.lockNow()" title="قفل">🔒</button>
+  </div>
+</header>
+
+<!-- Pages -->
+<main>
+  <!-- Dashboard -->
+  <section id="page-dashboard" class="page active">
+    <div class="warning-banner">
+      <span>⚠️</span>
+      <span>اطلاعات پزشکی روی همین دستگاه ذخیره می‌شوند. به‌طور منظم از بخش تنظیمات پشتیبان بگیرید.</span>
+    </div>
+    <div class="stats-grid" id="dashStats">
+      <div class="stat-card"><div class="num" id="statTotalPatients">0</div><div class="label">کل بیماران</div></div>
+      <div class="stat-card alt"><div class="num" id="statTodayPatients">0</div><div class="label">مراجعین امروز</div></div>
+      <div class="stat-card"><div class="num" id="statTodayEncounters">0</div><div class="label">مراجعات امروز</div></div>
+      <div class="stat-card alt"><div class="num" id="statTodayAppts">0</div><div class="label">نوبت‌های امروز</div></div>
+    </div>
+    <div class="btn-group">
+      <button class="btn btn-primary" style="flex:1" onclick="App.navigate('patient-form')">+ ثبت بیمار جدید</button>
+      <button class="btn btn-secondary" style="flex:1" onclick="App.navigate('search')">🔍 جستجو</button>
+    </div>
+    <div class="section-title">آخرین بیماران</div>
+    <div id="recentPatients"></div>
+    <div class="section-title">مراجعات امروز</div>
+    <div id="todayEncounters"></div>
+  </section>
+
+  <!-- Search -->
+  <section id="page-search" class="page">
+    <div class="search-bar">
+      <input type="search" class="form-control" id="searchInput" placeholder="نام، کد ملی، موبایل، شماره پرونده..." oninput="App.doSearch()">
+    </div>
+    <div id="searchResults"></div>
+  </section>
+
+  <!-- Patient Form (New / Edit) -->
+  <section id="page-patient-form" class="page">
+    <form id="patientForm" onsubmit="return App.savePatient(event)">
+      <input type="hidden" id="pf_id">
+      <div class="card">
+        <div class="card-title">اطلاعات هویتی</div>
+        <div class="form-row">
+          <div class="form-group"><label>نام *</label><input class="form-control" id="pf_firstName" required></div>
+          <div class="form-group"><label>نام خانوادگی *</label><input class="form-control" id="pf_lastName" required></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>کد ملی / شناسه</label><input class="form-control" id="pf_nationalId" inputmode="numeric" pattern="[0-9]*"></div>
+          <div class="form-group"><label>جنسیت</label>
+            <select class="form-control" id="pf_gender">
+              <option value="">انتخاب</option>
+              <option value="male">مرد</option>
+              <option value="female">زن</option>
+              <option value="other">سایر</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>تاریخ تولد (شمسی)</label>
+            <div class="date-input-wrap">
+              <input class="form-control" id="pf_birthDate" placeholder="انتخاب تاریخ" readonly onclick="DatePicker.open('pf_birthDate',{onSelect:()=>App.calcAge()})">
+              <button type="button" class="date-btn" onclick="DatePicker.open('pf_birthDate',{onSelect:()=>App.calcAge()})" title="تقویم">📅</button>
+            </div>
+          </div>
+          <div class="form-group"><label>سن</label><input class="form-control" id="pf_age" readonly placeholder="خودکار"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>موبایل</label><input class="form-control" id="pf_mobile" type="tel"></div>
+          <div class="form-group"><label>تلفن</label><input class="form-control" id="pf_phone" type="tel"></div>
+        </div>
+        <div class="form-group"><label>آدرس</label><textarea class="form-control" id="pf_address" rows="2"></textarea></div>
+        <div class="form-row">
+          <div class="form-group"><label>شغل</label>
+            <select class="form-control" id="pf_occupation">
+              <option value="">— انتخاب —</option>
+              <option value="کارمند">کارمند</option>
+              <option value="آزاد">آزاد</option>
+              <option value="خانه‌دار">خانه‌دار</option>
+              <option value="بازنشسته">بازنشسته</option>
+              <option value="دانشجو">دانشجو</option>
+              <option value="محصل">محصل</option>
+              <option value="کارگر">کارگر</option>
+              <option value="پزشک / کادر درمان">پزشک / کادر درمان</option>
+              <option value="معلم">معلم</option>
+              <option value="مهندس">مهندس</option>
+              <option value="راننده">راننده</option>
+              <option value="کشاورز">کشاورز</option>
+              <option value="بیکار">بیکار</option>
+              <option value="سایر">سایر</option>
+            </select>
+          </div>
+          <div class="form-group"><label>وضعیت تأهل</label>
+            <select class="form-control" id="pf_marital">
+              <option value="">—</option>
+              <option value="single">مجرد</option>
+              <option value="married">متأهل</option>
+              <option value="divorced">مطلقه</option>
+              <option value="widowed">بیوه</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label>گروه خونی</label>
+          <select class="form-control" id="pf_bloodType">
+            <option value="">نامشخص</option>
+            <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+            <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
+          </select>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">سوابق پزشکی</div>
+        <div class="form-group"><label>حساسیت‌های دارویی</label><textarea class="form-control" id="pf_allergies" rows="2" placeholder="نام دارو و نوع واکنش"></textarea></div>
+        <div class="form-group"><label>بیماری‌های زمینه‌ای</label><textarea class="form-control" id="pf_chronic" rows="2"></textarea></div>
+        <div class="form-group"><label>سابقه جراحی</label><textarea class="form-control" id="pf_surgeries" rows="2"></textarea></div>
+        <div class="form-group"><label>سابقه بستری</label><textarea class="form-control" id="pf_hospitalizations" rows="2"></textarea></div>
+        <div class="form-group"><label>سابقه خانوادگی مهم</label><textarea class="form-control" id="pf_familyHx" rows="2"></textarea></div>
+        <div class="form-group"><label>داروهای مصرفی فعلی</label><textarea class="form-control" id="pf_currentMeds" rows="2"></textarea></div>
+      </div>
+      <div class="card">
+        <div class="card-title">عادات و عوامل خطر</div>
+        <div class="form-row">
+          <div class="form-group"><label>سیگار</label>
+            <select class="form-control" id="pf_smoking">
+              <option value="no">خیر</option>
+              <option value="yes">بله</option>
+              <option value="former">سابقه</option>
+            </select>
+          </div>
+          <div class="form-group"><label>الکل</label>
+            <select class="form-control" id="pf_alcohol">
+              <option value="no">خیر</option>
+              <option value="yes">بله</option>
+              <option value="occasional">گاه‌گاهی</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label>سایر عوامل خطر / توضیحات</label><textarea class="form-control" id="pf_notes" rows="2"></textarea></div>
+      </div>
+      <div class="btn-group">
+        <button type="submit" class="btn btn-primary btn-block">💾 ذخیره بیمار</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- Patient Detail / EHR -->
+  <section id="page-patient" class="page">
+    <div id="patientSummary" class="patient-summary"></div>
+    <div class="btn-group no-print">
+      <button class="btn btn-primary btn-sm" onclick="App.openEncounterForm()">+ مراجعه جدید</button>
+      <button class="btn btn-secondary btn-sm" onclick="App.editCurrentPatient()">✏️ ویرایش</button>
+      <button class="btn btn-outline btn-sm" onclick="App.printPatientSummary()">🖨️ چاپ</button>
+      <button class="btn btn-danger btn-sm" onclick="App.confirmDeletePatient()">🗑️</button>
+    </div>
+    <div class="tabs no-print" id="patientTabs">
+      <button class="tab active" data-tab="info">اطلاعات پایه</button>
+      <button class="tab" data-tab="encounters">مراجعات</button>
+      <button class="tab" data-tab="meds">داروها</button>
+      <button class="tab" data-tab="labs">آزمایش‌ها</button>
+      <button class="tab" data-tab="files">فایل‌ها</button>
+      <button class="tab" data-tab="notes">یادداشت‌ها</button>
+      <button class="tab" data-tab="followups">پیگیری‌ها</button>
+    </div>
+    <div id="patientTabContent"></div>
+  </section>
+
+  <!-- Encounter Form -->
+  <section id="page-encounter-form" class="page">
+    <form id="encounterForm" onsubmit="return App.saveEncounter(event)">
+      <input type="hidden" id="ef_id">
+      <input type="hidden" id="ef_patientId">
+      <div class="card">
+        <div class="card-title">اطلاعات مراجعه</div>
+        <div class="form-row">
+          <div class="form-group"><label>تاریخ (شمسی)</label>
+            <div class="date-input-wrap">
+              <input class="form-control" id="ef_date" required readonly onclick="DatePicker.open('ef_date')">
+              <button type="button" class="date-btn" onclick="DatePicker.open('ef_date')" title="تقویم">📅</button>
+            </div>
+          </div>
+          <div class="form-group"><label>ساعت</label><input class="form-control" id="ef_time" type="time"></div>
+        </div>
+        <div class="form-group"><label>علت مراجعه (Chief Complaint) *</label>
+          <select class="form-control" id="ef_cc" required>
+            <option value="">انتخاب کنید...</option>
+            <option value="سردرد">سردرد</option>
+            <option value="تب و لرز">تب و لرز</option>
+            <option value="سرفه و گلودرد">سرفه و گلودرد</option>
+            <option value="درد شکم">درد شکم</option>
+            <option value="کمردرد">کمردرد</option>
+            <option value="درد قفسه سینه">درد قفسه سینه</option>
+            <option value="تنگی نفس">تنگی نفس</option>
+            <option value="سرگیجه">سرگیجه</option>
+            <option value="خستگی و ضعف">خستگی و ضعف</option>
+            <option value="تهوع و استفراغ">تهوع و استفراغ</option>
+            <option value="درد مفاصل">درد مفاصل</option>
+            <option value="بثورات پوستی">بثورات پوستی</option>
+            <option value="عفونت ادراری">عفونت ادراری</option>
+            <option value="پیگیری">پیگیری</option>
+            <option value="معاینه دوره‌ای">معاینه دوره‌ای</option>
+            <option value="سایر">سایر</option>
+          </select>
+        </div>
+        <div class="form-group" id="ef_cc_other_wrap" style="display:none"><label>علت مراجعه (توضیح)</label><input class="form-control" id="ef_cc_other" placeholder="علت مراجعه را بنویسید"></div>
+        <div class="form-group"><label>شرح حال بیماری فعلی (HPI)</label><textarea class="form-control" id="ef_hpi" rows="3"></textarea></div>
+        <div class="form-group"><label>علائم</label><textarea class="form-control" id="ef_symptoms" rows="2"></textarea></div>
+      </div>
+      <div class="card">
+        <div class="card-title">علائم حیاتی</div>
+        <div class="form-row-3">
+          <div class="form-group"><label>فشار خون</label><input class="form-control" id="ef_bp" placeholder="120/80"></div>
+          <div class="form-group"><label>نبض</label><input class="form-control" id="ef_pulse" type="number" placeholder="bpm"></div>
+          <div class="form-group"><label>تنفس</label><input class="form-control" id="ef_rr" type="number" placeholder="/min"></div>
+        </div>
+        <div class="form-row-3">
+          <div class="form-group"><label>دما (°C)</label><input class="form-control" id="ef_temp" type="number" step="0.1"></div>
+          <div class="form-group"><label>SpO2 %</label><input class="form-control" id="ef_spo2" type="number"></div>
+          <div class="form-group"><label>وزن (kg)</label><input class="form-control" id="ef_weight" type="number" step="0.1" onchange="App.calcBMI()"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>قد (cm)</label><input class="form-control" id="ef_height" type="number" onchange="App.calcBMI()"></div>
+          <div class="form-group"><label>BMI</label><input class="form-control" id="ef_bmi" readonly></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">معاینه و ارزیابی</div>
+        <div class="form-group"><label>معاینه فیزیکی</label><textarea class="form-control" id="ef_exam" rows="3"></textarea></div>
+        <div class="form-group"><label>ارزیابی پزشک</label><textarea class="form-control" id="ef_assessment" rows="2"></textarea></div>
+        <div class="form-group"><label>تشخیص اصلی *</label>
+          <select class="form-control" id="ef_dxPrimary" required>
+            <option value="">انتخاب تشخیص...</option>
+            <option value="عفونت حاد دستگاه تنفسی فوقانی">عفونت حاد دستگاه تنفسی فوقانی</option>
+            <option value="فشار خون بالا">فشار خون بالا</option>
+            <option value="دیابت نوع ۲">دیابت نوع ۲</option>
+            <option value="آسم">آسم</option>
+            <option value="ریفلاکس معده به مری">ریفلاکس معده به مری</option>
+            <option value="کمردرد">کمردرد</option>
+            <option value="سردرد تنشی">سردرد تنشی</option>
+            <option value="میگرن">میگرن</option>
+            <option value="عفونت ادراری">عفونت ادراری</option>
+            <option value="پنومونی">پنومونی</option>
+            <option value="درماتیت">درماتیت</option>
+            <option value="آنفلوآنزا">آنفلوآنزا</option>
+            <option value="برونشیت حاد">برونشیت حاد</option>
+            <option value="سینوزیت">سینوزیت</option>
+            <option value="گاستریت">گاستریت</option>
+            <option value="کم‌خونی">کم‌خونی</option>
+            <option value="اضطراب / استرس">اضطراب / استرس</option>
+            <option value="آرتروز">آرتروز</option>
+            <option value="هایپرلیپیدمی">هایپرلیپیدمی</option>
+            <option value="هیپوتیروئیدی">هیپوتیروئیدی</option>
+            <option value="سایر">سایر</option>
+          </select>
+        </div>
+        <div class="form-group" id="ef_dx_other_wrap" style="display:none"><label>تشخیص (توضیح)</label><input class="form-control" id="ef_dx_other" placeholder="تشخیص را بنویسید"></div>
+        <div class="form-group"><label>تشخیص‌های همراه</label>
+          <select class="form-control" id="ef_dxSecondary">
+            <option value="">— هیچ —</option>
+            <option value="فشار خون بالا">فشار خون بالا</option>
+            <option value="دیابت نوع ۲">دیابت نوع ۲</option>
+            <option value="آسم">آسم</option>
+            <option value="چاقی">چاقی</option>
+            <option value="کم‌خونی">کم‌خونی</option>
+            <option value="هایپرلیپیدمی">هایپرلیپیدمی</option>
+            <option value="اضطراب">اضطراب</option>
+            <option value="سایر">سایر</option>
+          </select>
+        </div>
+        <div class="form-group"><label>کد ICD (اختیاری)</label>
+          <select class="form-control" id="ef_icd">
+            <option value="">— انتخاب کد —</option>
+            <option value="J06.9">J06.9 - عفونت حاد تنفسی فوقانی</option>
+            <option value="I10">I10 - فشار خون بالا</option>
+            <option value="E11">E11 - دیابت نوع ۲</option>
+            <option value="J45">J45 - آسم</option>
+            <option value="K21.9">K21.9 - ریفلاکس معده به مری</option>
+            <option value="M54.5">M54.5 - کمردرد</option>
+            <option value="R51">R51 - سردرد</option>
+            <option value="N39.0">N39.0 - عفونت ادراری</option>
+            <option value="J18.9">J18.9 - پنومونی</option>
+            <option value="L30.9">L30.9 - درماتیت</option>
+            <option value="J11">J11 - آنفلوآنزا</option>
+            <option value="J20.9">J20.9 - برونشیت حاد</option>
+            <option value="J01.9">J01.9 - سینوزیت</option>
+            <option value="K29.7">K29.7 - گاستریت</option>
+            <option value="D50.9">D50.9 - کم‌خونی فقر آهن</option>
+            <option value="F41.9">F41.9 - اضطراب</option>
+            <option value="M19.9">M19.9 - آرتروز</option>
+            <option value="E78.5">E78.5 - هایپرلیپیدمی</option>
+            <option value="E03.9">E03.9 - هیپوتیروئیدی</option>
+          </select>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">برنامه درمانی و توصیه‌ها</div>
+        <div class="form-group"><label>برنامه درمانی</label><textarea class="form-control" id="ef_plan" rows="2"></textarea></div>
+        <div class="form-group"><label>توصیه‌ها</label>
+          <select class="form-control" id="ef_advice">
+            <option value="">— انتخاب توصیه —</option>
+            <option value="استراحت و مصرف مایعات فراوان">استراحت و مصرف مایعات فراوان</option>
+            <option value="رژیم کم‌نمک">رژیم کم‌نمک</option>
+            <option value="رژیم دیابتی و کنترل قند">رژیم دیابتی و کنترل قند</option>
+            <option value="اجتناب از فعالیت سنگین">اجتناب از فعالیت سنگین</option>
+            <option value="استفاده از ماسک و بهداشت دست">استفاده از ماسک و بهداشت دست</option>
+            <option value="کنترل فشار خون روزانه">کنترل فشار خون روزانه</option>
+            <option value="کاهش وزن و ورزش منظم">کاهش وزن و ورزش منظم</option>
+            <option value="ترک سیگار">ترک سیگار</option>
+            <option value="مراجعه فوری در صورت تشدید علائم">مراجعه فوری در صورت تشدید علائم</option>
+            <option value="سایر">سایر</option>
+          </select>
+        </div>
+        <div class="form-group" id="ef_advice_other_wrap" style="display:none"><label>توصیه (توضیح)</label><input class="form-control" id="ef_advice_other"></div>
+        <div class="form-group"><label>زمان مراجعه بعدی</label>
+          <select class="form-control" id="ef_followup">
+            <option value="">— نیاز به پیگیری نیست —</option>
+            <option value="۳ روز بعد">۳ روز بعد</option>
+            <option value="۱ هفته بعد">۱ هفته بعد</option>
+            <option value="۲ هفته بعد">۲ هفته بعد</option>
+            <option value="۱ ماه بعد">۱ ماه بعد</option>
+            <option value="۳ ماه بعد">۳ ماه بعد</option>
+            <option value="۶ ماه بعد">۶ ماه بعد</option>
+            <option value="در صورت تشدید علائم">در صورت تشدید علائم</option>
+            <option value="سایر">سایر</option>
+          </select>
+        </div>
+        <div class="form-group" id="ef_followup_other_wrap" style="display:none"><label>زمان پیگیری (توضیح)</label><input class="form-control" id="ef_followup_other"></div>
+        <div class="form-group"><label>یادداشت پزشک</label><textarea class="form-control" id="ef_notes" rows="2"></textarea></div>
+      </div>
+      <div class="card">
+        <div class="card-title">داروها (نسخه)</div>
+        <div id="medsList"></div>
+        <button type="button" class="btn btn-secondary btn-sm mt-1" onclick="App.addMedRow()">+ افزودن دارو</button>
+      </div>
+      <div class="btn-group">
+        <button type="submit" class="btn btn-primary btn-block">💾 ذخیره مراجعه</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- Appointments -->
+  <section id="page-appointments" class="page">
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="App.openApptForm()">+ نوبت جدید</button>
+    </div>
+    <div class="section-title">نوبت‌های امروز</div>
+    <div id="todayApptsList"></div>
+    <div class="section-title">نوبت‌های آینده</div>
+    <div id="futureApptsList"></div>
+  </section>
+
+  <!-- Reports -->
+  <section id="page-reports" class="page">
+    <div class="card">
+      <div class="card-title">🔍 فیلتر گزارش پیشرفته</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>از تاریخ</label>
+          <div class="date-input-wrap">
+            <input class="form-control" id="rep_dateFrom" placeholder="انتخاب تاریخ" readonly onclick="DatePicker.open('rep_dateFrom')">
+            <button type="button" class="date-btn" onclick="DatePicker.open('rep_dateFrom')" title="تقویم">📅</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>تا تاریخ</label>
+          <div class="date-input-wrap">
+            <input class="form-control" id="rep_dateTo" placeholder="انتخاب تاریخ" readonly onclick="DatePicker.open('rep_dateTo')">
+            <button type="button" class="date-btn" onclick="DatePicker.open('rep_dateTo')" title="تقویم">📅</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>علت مراجعه (شکایت اصلی)</label>
+        <select class="form-control" id="rep_cc">
+          <option value="">— همه —</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>تشخیص اصلی</label>
+        <select class="form-control" id="rep_dx">
+          <option value="">— همه —</option>
+        </select>
+      </div>
+      <div class="btn-group" style="flex-wrap:wrap">
+        <button class="btn btn-primary btn-sm" onclick="App.applyReportFilter()">اعمال فیلتر</button>
+        <button class="btn btn-secondary btn-sm" onclick="App.resetReportFilter()">پاک کردن</button>
+        <button class="btn btn-outline btn-sm" onclick="App.setReportPeriod('today')">امروز</button>
+        <button class="btn btn-outline btn-sm" onclick="App.setReportPeriod('month')">این ماه</button>
+        <button class="btn btn-outline btn-sm" onclick="App.setReportPeriod('year')">امسال</button>
+        <button class="btn btn-outline btn-sm" onclick="App.setReportPeriod('all')">همه</button>
+      </div>
+    </div>
+
+    <div class="stats-grid" id="repStatsGrid" style="margin-bottom:12px">
+      <div class="stat-card"><div class="num" id="repStatEnc">0</div><div class="label">مراجعات</div></div>
+      <div class="stat-card alt"><div class="num" id="repStatPatients">0</div><div class="label">بیماران یکتا</div></div>
+      <div class="stat-card"><div class="num" id="repStatMeds">0</div><div class="label">نسخه‌ها</div></div>
+      <div class="stat-card alt"><div class="num" id="repStatDx">0</div><div class="label">تشخیص‌های متمایز</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title flex-between" style="flex-wrap:wrap;gap:8px">
+        <span>نتایج فیلتر شده</span>
+        <div class="btn-group" style="margin:0;flex-wrap:wrap">
+          <button class="btn btn-outline btn-sm" id="repViewCardsBtn" onclick="App.setReportView('cards')">📋 کارت</button>
+          <button class="btn btn-primary btn-sm" id="repViewLinearBtn" onclick="App.setReportView('linear')">📊 گزارش خطی</button>
+          <button class="btn btn-secondary btn-sm" onclick="App.printReportLinear()">🖨️ چاپ</button>
+          <button class="btn btn-secondary btn-sm" onclick="App.exportReportCSV()">⬇️ CSV</button>
+        </div>
+      </div>
+      <div id="repResults" style="max-height:480px;overflow-y:auto;overflow-x:auto"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">گزارش‌های کلی (بدون فیلتر)</div>
+      <div id="reportsContent"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">تشخیص‌های پرتکرار (بر اساس فیلتر)</div>
+      <div id="topDx"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">علت‌های مراجعه پرتکرار (بر اساس فیلتر)</div>
+      <div id="topCC"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">داروهای پرتجویز (بر اساس فیلتر)</div>
+      <div id="topMeds"></div>
+    </div>
+  </section>
+
+  <!-- Settings -->
+  <section id="page-settings" class="page">
+    <div class="card">
+      <div class="card-title">امنیت</div>
+      <div class="form-group"><label>تغییر PIN (۴ تا ۶ رقم)</label>
+        <input class="form-control" id="set_pin" type="password" inputmode="numeric" maxlength="6" placeholder="PIN جدید">
+      </div>
+      <button class="btn btn-secondary btn-sm" onclick="App.setPin()">ذخیره PIN</button>
+      <div class="form-group mt-2"><label>قفل خودکار پس از (دقیقه)</label>
+        <select class="form-control" id="set_lockTimeout" onchange="App.saveSettings()">
+          <option value="1">۱ دقیقه</option>
+          <option value="3">۳ دقیقه</option>
+          <option value="5" selected>۵ دقیقه</option>
+          <option value="10">۱۰ دقیقه</option>
+          <option value="30">۳۰ دقیقه</option>
+        </select>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">پشتیبان‌گیری و بازیابی</div>
+      <p class="text-muted mb-1" style="font-size:0.85rem">فایل پشتیبان شامل تمام بیماران، مراجعات، نوبت‌ها و تنظیمات است.</p>
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="App.exportBackup()">⬇️ دانلود پشتیبان (JSON)</button>
+        <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">⬆️ بازیابی از فایل</button>
+        <input type="file" id="importFile" accept=".json" class="hidden" onchange="App.importBackup(event)">
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">لیست‌های کشویی</div>
+      <p class="text-muted mb-1" style="font-size:0.85rem">آیتم‌های قابل‌انتخاب در فرم‌ها را اینجا ویرایش کنید.</p>
+      <div class="form-group">
+        <label>انتخاب لیست</label>
+        <select class="form-control" id="listMgrKey" onchange="App.renderListManager()">
+        </select>
+      </div>
+      <div id="listMgrItems" style="margin-bottom:12px"></div>
+      <div class="form-row" style="align-items:flex-end">
+        <div class="form-group" style="flex:1;margin-bottom:0">
+          <label>آیتم جدید</label>
+          <input class="form-control" id="listMgrNewItem" placeholder="متن آیتم..." onkeydown="if(event.key==='Enter'){event.preventDefault();App.addListItem()}">
+        </div>
+        <button type="button" class="btn btn-primary btn-sm" style="margin-bottom:0;min-height:48px" onclick="App.addListItem()">+ افزودن</button>
+      </div>
+      <div class="btn-group mt-2">
+        <button class="btn btn-outline btn-sm" onclick="App.resetCurrentList()">بازنشانی این لیست</button>
+        <button class="btn btn-secondary btn-sm" onclick="App.resetAllLists()">بازنشانی همه به پیش‌فرض</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">داده‌های نمونه</div>
+      <button class="btn btn-outline btn-sm" onclick="App.loadSampleData()">بارگذاری داده‌های نمونه</button>
+    </div>
+    <div class="card">
+      <div class="card-title">درباره</div>
+      <p style="font-size:0.85rem;color:var(--text-secondary)">
+        نسخه ۱.۰ — پرونده الکترونیک مطب<br>
+        تمام اطلاعات روی دستگاه شما ذخیره می‌شود (IndexedDB).<br>
+        برای استفاده در مطب طراحی شده است.
+      </p>
+    </div>
+  </section>
+</main>
+
+<!-- Bottom Navigation -->
+<nav class="bottom-nav no-print">
+  <button class="nav-item active" data-page="dashboard" onclick="App.navigate('dashboard')">
+    <span class="nav-icon">🏠</span><span>داشبورد</span>
+  </button>
+  <button class="nav-item" data-page="search" onclick="App.navigate('search')">
+    <span class="nav-icon">🔍</span><span>جستجو</span>
+  </button>
+  <button class="nav-item" data-page="appointments" onclick="App.navigate('appointments')">
+    <span class="nav-icon">📅</span><span>نوبت‌ها</span>
+  </button>
+  <button class="nav-item" data-page="reports" onclick="App.navigate('reports')">
+    <span class="nav-icon">📊</span><span>گزارش</span>
+  </button>
+  <button class="nav-item" data-page="settings" onclick="App.navigate('settings')">
+    <span class="nav-icon">⚙️</span><span>تنظیمات</span>
+  </button>
+</nav>
+
+<!-- Modal container -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)App.closeModal()">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<!-- Date Picker overlay (separate so it can open over forms/modals) -->
+<div class="modal-overlay" id="datePickerOverlay" onclick="if(event.target===this)DatePicker.close()" style="z-index:250">
+  <div class="modal" id="datePickerContent"></div>
+</div>
+
+<!-- Print area -->
+<div class="print-area hidden" id="printArea"></div>
+
+<script>
+/* ============================================================
+   JALALI (Persian) Date Utilities
+   ============================================================ */
+const Jalali = {
+  g_days: [31,28,31,30,31,30,31,31,30,31,30,31],
+  j_days: [31,31,31,31,31,31,30,30,30,30,30,29],
+  toJalali(gy, gm, gd) {
+    let g_d_m = [0,31,59,90,120,151,181,212,243,273,304,334];
+    let jy = (gy <= 1600) ? 0 : 979;
+    gy -= (gy <= 1600) ? 621 : 1600;
+    let gy2 = (gm > 2) ? (gy + 1) : gy;
+    let days = (365 * gy) + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) - 80 + gd + g_d_m[gm - 1];
+    jy += 33 * Math.floor(days / 12053);
+    days %= 12053;
+    jy += 4 * Math.floor(days / 1461);
+    days %= 1461;
+    if (days > 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; }
+    let jm, jd;
+    if (days < 186) { jm = 1 + Math.floor(days / 31); jd = 1 + (days % 31); }
+    else { jm = 7 + Math.floor((days - 186) / 30); jd = 1 + ((days - 186) % 30); }
+    return { jy, jm, jd };
+  },
+  toGregorian(jy, jm, jd) {
+    let gy = (jy <= 979) ? 621 : 1600;
+    jy -= (jy <= 979) ? 0 : 979;
+    let days = (365 * jy) + Math.floor(jy / 33) * 8 + Math.floor(((jy % 33) + 3) / 4) + 78 + jd + ((jm < 7) ? (jm - 1) * 31 : ((jm - 7) * 30 + 186));
+    gy += 400 * Math.floor(days / 146097);
+    days %= 146097;
+    if (days > 36524) { gy += 100 * Math.floor(--days / 36524); days %= 36524; if (days >= 365) days++; }
+    gy += 4 * Math.floor(days / 1461);
+    days %= 1461;
+    if (days > 365) { gy += Math.floor((days - 1) / 365); days = (days - 1) % 365; }
+    let gd = days + 1;
+    let sal_a = [0,31,((gy % 4 === 0 && gy % 100 !== 0) || (gy % 400 === 0)) ? 29 : 28,31,30,31,30,31,31,30,31,30,31];
+    let gm;
+    for (gm = 0; gm < 13 && gd > sal_a[gm]; gm++) gd -= sal_a[gm];
+    return { gy, gm, gd };
+  },
+  now() {
+    const d = new Date();
+    return this.toJalali(d.getFullYear(), d.getMonth() + 1, d.getDate());
+  },
+  format(j, sep = '/') {
+    if (!j) return '';
+    const pad = n => String(n).padStart(2, '0');
+    return `${j.jy}${sep}${pad(j.jm)}${sep}${pad(j.jd)}`;
+  },
+  parse(str) {
+    if (!str) return null;
+    const p = str.replace(/[-\.]/g, '/').split('/');
+    if (p.length !== 3) return null;
+    return { jy: +p[0], jm: +p[1], jd: +p[2] };
+  },
+  todayStr() { return this.format(this.now()); },
+  ageFromJalali(jStr) {
+    const b = this.parse(jStr);
+    if (!b) return '';
+    const n = this.now();
+    let age = n.jy - b.jy;
+    if (n.jm < b.jm || (n.jm === b.jm && n.jd < b.jd)) age--;
+    return age >= 0 ? age : '';
+  },
+  isLeap(jy) {
+    const breaks = [1,5,9,13,17,22,26,30];
+    const jp = jy > 0 ? jy : -jy;
+    const jump = jp < 979 ? 0 : 979;
+    let jp2 = jp - jump;
+    let jump2 = -1;
+    while (jump2 < 0) {
+      for (let i = 1; i <= 7; i++) {
+        if (jp2 < breaks[i] * 33) { jump2 = i - 1; break; }
+      }
+      if (jump2 < 0) { jp2 -= 33 * 7; jump += 33 * 7; }
+    }
+    const n = jp2 - breaks[jump2] * 33 + 1;
+    return ((n + 1) % 33) % 4 === 1 || (n === 1 && breaks[jump2] === 1 && jump2 > 0);
+  },
+  daysInMonth(jy, jm) {
+    if (jm <= 6) return 31;
+    if (jm <= 11) return 30;
+    return this.isLeap(jy) ? 30 : 29;
+  },
+  monthNames: ['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'],
+  weekDays: ['ش','ی','د','س','چ','پ','ج']
+};
+
+/* ============================================================
+   Jalali Date Picker UI
+   ============================================================ */
+const DatePicker = {
+  targetId: null,
+  viewYear: 1400,
+  viewMonth: 1,
+  selected: null,
+  onSelect: null,
+
+  open(inputId, opts = {}) {
+    this.targetId = inputId;
+    this.onSelect = opts.onSelect || null;
+    const input = document.getElementById(inputId);
+    const current = input && input.value ? Jalali.parse(input.value) : null;
+    const now = Jalali.now();
+    if (current) {
+      this.viewYear = current.jy;
+      this.viewMonth = current.jm;
+      this.selected = { ...current };
+    } else {
+      this.viewYear = now.jy;
+      this.viewMonth = now.jm;
+      this.selected = null;
+    }
+    this.render();
+  },
+
+  render() {
+    const now = Jalali.now();
+    const daysCount = Jalali.daysInMonth(this.viewYear, this.viewMonth);
+    // First day of month weekday (0=Sat for Persian week)
+    const g = Jalali.toGregorian(this.viewYear, this.viewMonth, 1);
+    const jsDate = new Date(g.gy, g.gm - 1, g.gd);
+    // JS getDay: 0=Sun ... 6=Sat. Persian week starts Saturday.
+    // Map: Sat=0, Sun=1, ..., Fri=6
+    let startDow = (jsDate.getDay() + 1) % 7;
+
+    let yearsHtml = '';
+    for (let y = now.jy + 2; y >= 1300; y--) {
+      yearsHtml += `<option value="${y}" ${y === this.viewYear ? 'selected' : ''}>${y}</option>`;
+    }
+    let monthsHtml = Jalali.monthNames.map((m, i) =>
+      `<option value="${i + 1}" ${i + 1 === this.viewMonth ? 'selected' : ''}>${m}</option>`
+    ).join('');
+
+    let daysHtml = Jalali.weekDays.map(d => `<div class="cal-day-name">${d}</div>`).join('');
+    for (let i = 0; i < startDow; i++) daysHtml += `<div class="cal-day other"></div>`;
+    for (let d = 1; d <= daysCount; d++) {
+      const isToday = this.viewYear === now.jy && this.viewMonth === now.jm && d === now.jd;
+      const isSel = this.selected && this.selected.jy === this.viewYear && this.selected.jm === this.viewMonth && this.selected.jd === d;
+      const cls = ['cal-day', isToday ? 'today' : '', isSel ? 'selected' : ''].filter(Boolean).join(' ');
+      daysHtml += `<div class="${cls}" data-d="${d}" onclick="DatePicker.pickDay(${d})">${d}</div>`;
+    }
+
+    document.getElementById('datePickerContent').innerHTML = `
+      <div class="modal-header">
+        <h2>📅 انتخاب تاریخ شمسی</h2>
+        <button class="modal-close" onclick="DatePicker.close()">×</button>
+      </div>
+      <div class="dp-header">
+        <button type="button" class="dp-nav-btn" onclick="DatePicker.prevMonth()">›</button>
+        <select id="dpYear" onchange="DatePicker.changeYear(this.value)">${yearsHtml}</select>
+        <select id="dpMonth" onchange="DatePicker.changeMonth(this.value)">${monthsHtml}</select>
+        <button type="button" class="dp-nav-btn" onclick="DatePicker.nextMonth()">‹</button>
+      </div>
+      <div class="cal-grid">${daysHtml}</div>
+      <div class="dp-today-label">امروز: ${Jalali.format(now)}</div>
+      <div class="dp-actions">
+        <button type="button" class="btn btn-secondary" onclick="DatePicker.setToday()">امروز</button>
+        <button type="button" class="btn btn-outline" onclick="DatePicker.clear()">پاک کردن</button>
+        <button type="button" class="btn btn-primary" onclick="DatePicker.confirm()">تأیید</button>
+      </div>`;
+    document.getElementById('datePickerOverlay').classList.add('show');
+  },
+
+  close() {
+    document.getElementById('datePickerOverlay').classList.remove('show');
+  },
+
+  pickDay(d) {
+    this.selected = { jy: this.viewYear, jm: this.viewMonth, jd: d };
+    this.render();
+  },
+
+  changeYear(y) {
+    this.viewYear = parseInt(y, 10);
+    this.render();
+  },
+
+  changeMonth(m) {
+    this.viewMonth = parseInt(m, 10);
+    this.render();
+  },
+
+  prevMonth() {
+    this.viewMonth--;
+    if (this.viewMonth < 1) { this.viewMonth = 12; this.viewYear--; }
+    this.render();
+  },
+
+  nextMonth() {
+    this.viewMonth++;
+    if (this.viewMonth > 12) { this.viewMonth = 1; this.viewYear++; }
+    this.render();
+  },
+
+  setToday() {
+    const n = Jalali.now();
+    this.viewYear = n.jy;
+    this.viewMonth = n.jm;
+    this.selected = { ...n };
+    this.render();
+  },
+
+  clear() {
+    const input = document.getElementById(this.targetId);
+    if (input) {
+      input.value = '';
+      input.dispatchEvent(new Event('change'));
+    }
+    if (this.onSelect) this.onSelect();
+    this.close();
+  },
+
+  confirm() {
+    if (!this.selected) {
+      toast('لطفاً یک روز را انتخاب کنید', 'warning');
+      return;
+    }
+    const input = document.getElementById(this.targetId);
+    if (input) {
+      input.value = Jalali.format(this.selected);
+      input.dispatchEvent(new Event('change'));
+    }
+    if (this.onSelect) this.onSelect();
+    this.close();
+  }
+};
+
+/* ============================================================
+   Database Layer (IndexedDB)
+   ============================================================ */
+const DB = {
+  name: 'ClinicEHR',
+  version: 1,
+  db: null,
+  async init() {
+    return new Promise((resolve, reject) => {
+      const req = indexedDB.open(this.name, this.version);
+      req.onupgradeneeded = (e) => {
+        const db = e.target.result;
+        if (!db.objectStoreNames.contains('patients')) {
+          const s = db.createObjectStore('patients', { keyPath: 'id' });
+          s.createIndex('nationalId', 'nationalId', { unique: false });
+          s.createIndex('mobile', 'mobile', { unique: false });
+          s.createIndex('lastName', 'lastName', { unique: false });
+        }
+        if (!db.objectStoreNames.contains('encounters')) {
+          const s = db.createObjectStore('encounters', { keyPath: 'id' });
+          s.createIndex('patientId', 'patientId', { unique: false });
+          s.createIndex('date', 'date', { unique: false });
+        }
+        if (!db.objectStoreNames.contains('appointments')) {
+          const s = db.createObjectStore('appointments', { keyPath: 'id' });
+          s.createIndex('date', 'date', { unique: false });
+          s.createIndex('patientId', 'patientId', { unique: false });
+        }
+        if (!db.objectStoreNames.contains('files')) {
+          const s = db.createObjectStore('files', { keyPath: 'id' });
+          s.createIndex('patientId', 'patientId', { unique: false });
+        }
+        if (!db.objectStoreNames.contains('settings')) {
+          db.createObjectStore('settings', { keyPath: 'key' });
+        }
+      };
+      req.onsuccess = (e) => { this.db = e.target.result; resolve(); };
+      req.onerror = (e) => reject(e.target.error);
+    });
+  },
+  async put(store, data) {
+    return new Promise((resolve, reject) => {
+      const tx = this.db.transaction(store, 'readwrite');
+      tx.objectStore(store).put(data);
+      tx.oncomplete = () => resolve(data);
+      tx.onerror = (e) => reject(e.target.error);
+    });
+  },
+  async get(store, id) {
+    return new Promise((resolve, reject) => {
+      const tx = this.db.transaction(store, 'readonly');
+      const req = tx.objectStore(store).get(id);
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = (e) => reject(e.target.error);
+    });
+  },
+  async getAll(store) {
+    return new Promise((resolve, reject) => {
+      const tx = this.db.transaction(store, 'readonly');
+      const req = tx.objectStore(store).getAll();
+      req.onsuccess = () => resolve(req.result || []);
+      req.onerror = (e) => reject(e.target.error);
+    });
+  },
+  async delete(store, id) {
+    return new Promise((resolve, reject) => {
+      const tx = this.db.transaction(store, 'readwrite');
+      tx.objectStore(store).delete(id);
+      tx.oncomplete = () => resolve();
+      tx.onerror = (e) => reject(e.target.error);
+    });
+  },
+  async getByIndex(store, indexName, value) {
+    return new Promise((resolve, reject) => {
+      const tx = this.db.transaction(store, 'readonly');
+      const idx = tx.objectStore(store).index(indexName);
+      const req = idx.getAll(value);
+      req.onsuccess = () => resolve(req.result || []);
+      req.onerror = (e) => reject(e.target.error);
+    });
+  },
+  async clear(store) {
+    return new Promise((resolve, reject) => {
+      const tx = this.db.transaction(store, 'readwrite');
+      tx.objectStore(store).clear();
+      tx.oncomplete = () => resolve();
+      tx.onerror = (e) => reject(e.target.error);
+    });
+  }
+};
+
+/* ============================================================
+   Utilities
+   ============================================================ */
+const Utils = {
+  uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 9); },
+  genderLabel(g) { return { male: 'مرد', female: 'زن', other: 'سایر' }[g] || g || '—'; },
+  maritalLabel(m) { return { single: 'مجرد', married: 'متأهل', divorced: 'مطلقه', widowed: 'بیوه' }[m] || '—'; },
+  smokingLabel(s) { return { no: 'خیر', yes: 'بله', former: 'سابقه' }[s] || '—'; },
+  async hashPin(pin) {
+    const enc = new TextEncoder().encode(pin + 'ClinicEHR_Salt_v1');
+    const buf = await crypto.subtle.digest('SHA-256', enc);
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  },
+  formatFileSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / 1048576).toFixed(1) + ' MB';
+  },
+  escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+};
+
+
+/* ============================================================
+   Configurable Dropdown Lists
+   ============================================================ */
+const ListConfig = {
+  DEFAULTS: {
+    occupations: ['کارمند','آزاد','خانه‌دار','بازنشسته','دانشجو','محصل','کارگر','پزشک / کادر درمان','معلم','مهندس','راننده','کشاورز','بیکار','سایر'],
+    chiefComplaints: ['سردرد','تب و لرز','سرفه و گلودرد','درد شکم','کمردرد','درد قفسه سینه','تنگی نفس','سرگیجه','خستگی و ضعف','تهوع و استفراغ','درد مفاصل','بثورات پوستی','عفونت ادراری','پیگیری','معاینه دوره‌ای','سایر'],
+    diagnoses: ['عفونت حاد دستگاه تنفسی فوقانی','فشار خون بالا','دیابت نوع ۲','آسم','ریفلاکس معده به مری','کمردرد','سردرد تنشی','میگرن','عفونت ادراری','پنومونی','درماتیت','آنفلوآنزا','برونشیت حاد','سینوزیت','گاستریت','کم‌خونی','اضطراب / استرس','آرتروز','هایپرلیپیدمی','هیپوتیروئیدی','سایر'],
+    secondaryDiagnoses: ['فشار خون بالا','دیابت نوع ۲','آسم','چاقی','کم‌خونی','هایپرلیپیدمی','اضطراب','سایر'],
+    advice: ['استراحت و مصرف مایعات فراوان','رژیم کم‌نمک','رژیم دیابتی و کنترل قند','اجتناب از فعالیت سنگین','استفاده از ماسک و بهداشت دست','کنترل فشار خون روزانه','کاهش وزن و ورزش منظم','ترک سیگار','مراجعه فوری در صورت تشدید علائم','سایر'],
+    followups: ['۳ روز بعد','۱ هفته بعد','۲ هفته بعد','۱ ماه بعد','۳ ماه بعد','۶ ماه بعد','در صورت تشدید علائم','سایر'],
+    medications: ['استامینوفن','ایبوپروفن','آموکسی‌سیلین','آزیترومایسین','متفورمین','لوزارتان','آتورواستاتین','امپرازول','ستیریزین','دگزامتازون','سالبوتامول','سرترالین','آسپرین','کلوفن','دیفن‌هیدرامین','سایر'],
+    apptReasons: ['معاینه','پیگیری','نسخه','تزریق','مشاوره','نتیجه آزمایش','سایر'],
+    medForms: ['قرص','کپسول','شربت','آمپول','پماد','قطره','اسپری'],
+    medFreqs: ['هر ۶ ساعت','هر ۸ ساعت','هر ۱۲ ساعت','روزانه یک‌بار','روزانه دو بار','روزانه سه بار','قبل از خواب','در صورت نیاز'],
+    medDurations: ['۳ روز','۵ روز','۷ روز','۱۰ روز','۱۴ روز','۱ ماه','مزمن / بلندمدت'],
+    medInstructions: ['بعد از غذا','قبل از غذا','با معده خالی','همراه با غذا','قبل از خواب','در صورت درد'],
+    medRoutes: ['خوراکی','تزریقی','موضعی','استنشاقی']
+  },
+  LABELS: {
+    occupations: 'شغل‌ها',
+    chiefComplaints: 'علت مراجعه',
+    diagnoses: 'تشخیص اصلی',
+    secondaryDiagnoses: 'تشخیص‌های همراه',
+    advice: 'توصیه‌ها',
+    followups: 'زمان پیگیری',
+    medications: 'داروهای رایج',
+    apptReasons: 'علت نوبت',
+    medForms: 'شکل دارو',
+    medFreqs: 'دفعات مصرف دارو',
+    medDurations: 'مدت مصرف دارو',
+    medInstructions: 'دستور مصرف دارو',
+    medRoutes: 'مسیر مصرف دارو'
+  },
+  data: {},
+  async load() {
+    const s = await DB.get('settings', 'lists');
+    this.data = {};
+    for (const key of Object.keys(this.DEFAULTS)) {
+      this.data[key] = (s && Array.isArray(s[key]) && s[key].length) ? [...s[key]] : [...this.DEFAULTS[key]];
+    }
+  },
+  async save() {
+    await DB.put('settings', { key: 'lists', ...this.data });
+  },
+  get(key) {
+    return this.data[key] || this.DEFAULTS[key] || [];
+  },
+  async set(key, items) {
+    this.data[key] = items.filter(x => x && String(x).trim()).map(x => String(x).trim());
+    await this.save();
+  },
+  async addItem(key, item) {
+    item = String(item || '').trim();
+    if (!item) return false;
+    const list = this.get(key);
+    if (list.includes(item)) return false;
+    list.push(item);
+    await this.set(key, list);
+    return true;
+  },
+  async removeItem(key, item) {
+    const list = this.get(key).filter(x => x !== item);
+    await this.set(key, list);
+  },
+  async reset(key) {
+    this.data[key] = [...this.DEFAULTS[key]];
+    await this.save();
+  },
+  async resetAll() {
+    for (const key of Object.keys(this.DEFAULTS)) {
+      this.data[key] = [...this.DEFAULTS[key]];
+    }
+    await this.save();
+  },
+  populateSelect(selectId, listKey, opts = {}) {
+    const sel = document.getElementById(selectId);
+    if (!sel) return;
+    const current = sel.value;
+    const items = this.get(listKey);
+    const placeholder = opts.placeholder !== undefined ? opts.placeholder : (sel.options[0] && !sel.options[0].value ? sel.options[0].text : '— انتخاب —');
+    const includeEmpty = opts.includeEmpty !== false;
+    let html = includeEmpty ? `<option value="">${Utils.escapeHtml(placeholder)}</option>` : '';
+    items.forEach(item => {
+      html += `<option value="${Utils.escapeHtml(item)}">${Utils.escapeHtml(item)}</option>`;
+    });
+    sel.innerHTML = html;
+    if (current) {
+      sel.value = current;
+      if (sel.value !== current) {
+        const opt = document.createElement('option');
+        opt.value = current;
+        opt.textContent = current;
+        opt.selected = true;
+        sel.appendChild(opt);
+      }
+    }
+  },
+  populateAllFormSelects() {
+    this.populateSelect('pf_occupation', 'occupations', { placeholder: '— انتخاب —' });
+    this.populateSelect('ef_cc', 'chiefComplaints', { placeholder: 'انتخاب کنید...' });
+    this.populateSelect('ef_dxPrimary', 'diagnoses', { placeholder: 'انتخاب تشخیص...' });
+    this.populateSelect('ef_dxSecondary', 'secondaryDiagnoses', { placeholder: '— هیچ —' });
+    this.populateSelect('ef_advice', 'advice', { placeholder: '— انتخاب توصیه —' });
+    this.populateSelect('ef_followup', 'followups', { placeholder: '— نیاز به پیگیری نیست —' });
+  }
+};
+
+/* ============================================================
+   Services
+   ============================================================ */
+const PatientService = {
+  async all() { return DB.getAll('patients'); },
+  async get(id) { return DB.get('patients', id); },
+  async nextFileNumber() {
+    const all = await this.all();
+    let max = 0;
+    all.forEach(p => {
+      const n = parseInt(String(p.fileNumber || '').replace(/\D/g, ''), 10);
+      if (!isNaN(n) && n > max && n <= 9999) max = n;
+    });
+    const next = max + 1;
+    if (next > 9999) return String(next); // fallback beyond 4 digits if exhausted
+    return String(next).padStart(4, '0');
+  },
+  async save(p) {
+    if (!p.id) p.id = Utils.uid();
+    p.updatedAt = new Date().toISOString();
+    if (!p.createdAt) p.createdAt = p.updatedAt;
+    if (!p.fileNumber) p.fileNumber = await this.nextFileNumber();
+    await DB.put('patients', p);
+    return p;
+  },
+  async remove(id) {
+    const encs = await DB.getByIndex('encounters', 'patientId', id);
+    for (const e of encs) await DB.delete('encounters', e.id);
+    const files = await DB.getByIndex('files', 'patientId', id);
+    for (const f of files) await DB.delete('files', f.id);
+    await DB.delete('patients', id);
+  },
+  async search(q) {
+    const all = await this.all();
+    q = q.trim().toLowerCase();
+    if (!q) return all.slice(0, 50);
+    return all.filter(p =>
+      (p.firstName || '').toLowerCase().includes(q) ||
+      (p.lastName || '').toLowerCase().includes(q) ||
+      (p.nationalId || '').includes(q) ||
+      (p.mobile || '').includes(q) ||
+      (p.fileNumber || '').toLowerCase().includes(q) ||
+      ((p.firstName || '') + ' ' + (p.lastName || '')).toLowerCase().includes(q)
+    );
+  },
+  async findByNationalId(nid) {
+    if (!nid) return null;
+    const list = await DB.getByIndex('patients', 'nationalId', nid);
+    return list[0] || null;
+  }
+};
+
+const EncounterService = {
+  async all() { return DB.getAll('encounters'); },
+  async get(id) { return DB.get('encounters', id); },
+  async byPatient(pid) {
+    const list = await DB.getByIndex('encounters', 'patientId', pid);
+    return list.sort((a, b) => (b.date + (b.time || '')).localeCompare(a.date + (a.time || '')));
+  },
+  async save(e) {
+    if (!e.id) e.id = Utils.uid();
+    e.updatedAt = new Date().toISOString();
+    if (!e.createdAt) e.createdAt = e.updatedAt;
+    await DB.put('encounters', e);
+    return e;
+  },
+  async remove(id) { await DB.delete('encounters', id); },
+  async today() {
+    const today = Jalali.todayStr();
+    const all = await this.all();
+    return all.filter(e => e.date === today);
+  }
+};
+
+const AppointmentService = {
+  async all() { return DB.getAll('appointments'); },
+  async save(a) {
+    if (!a.id) a.id = Utils.uid();
+    await DB.put('appointments', a);
+    return a;
+  },
+  async remove(id) { await DB.delete('appointments', id); },
+  async today() {
+    const today = Jalali.todayStr();
+    const all = await this.all();
+    return all.filter(a => a.date === today).sort((a, b) => (a.time || '').localeCompare(b.time || ''));
+  },
+  async future() {
+    const today = Jalali.todayStr();
+    const all = await this.all();
+    return all.filter(a => a.date > today).sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
+  }
+};
+
+const FileService = {
+  async byPatient(pid) { return DB.getByIndex('files', 'patientId', pid); },
+  async save(f) {
+    if (!f.id) f.id = Utils.uid();
+    await DB.put('files', f);
+    return f;
+  },
+  async remove(id) { await DB.delete('files', id); }
+};
+
+const BackupService = {
+  async exportAll() {
+    return {
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      patients: await DB.getAll('patients'),
+      encounters: await DB.getAll('encounters'),
+      appointments: await DB.getAll('appointments'),
+      files: await DB.getAll('files'),
+      settings: await DB.getAll('settings')
+    };
+  },
+  async importAll(data) {
+    if (!data || !data.patients) throw new Error('فایل نامعتبر است');
+    const stores = ['patients', 'encounters', 'appointments', 'files', 'settings'];
+    for (const s of stores) await DB.clear(s);
+    for (const p of (data.patients || [])) await DB.put('patients', p);
+    for (const e of (data.encounters || [])) await DB.put('encounters', e);
+    for (const a of (data.appointments || [])) await DB.put('appointments', a);
+    for (const f of (data.files || [])) await DB.put('files', f);
+    for (const s of (data.settings || [])) await DB.put('settings', s);
+  }
+};
+
+const AuthService = {
+  pinHash: null,
+  unlocked: false,
+  lastActivity: Date.now(),
+  lockTimeoutMin: 5,
+  async load() {
+    const s = await DB.get('settings', 'auth');
+    if (s) {
+      this.pinHash = s.pinHash;
+      this.lockTimeoutMin = s.lockTimeout || 5;
+    }
+    const t = await DB.get('settings', 'theme');
+    if (t && t.value === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  },
+  async setPin(pin) {
+    this.pinHash = await Utils.hashPin(pin);
+    await DB.put('settings', { key: 'auth', pinHash: this.pinHash, lockTimeout: this.lockTimeoutMin });
+  },
+  async verify(pin) {
+    if (!this.pinHash) {
+      await this.setPin(pin);
+      return true;
+    }
+    const h = await Utils.hashPin(pin);
+    return h === this.pinHash;
+  },
+  hasPin() { return !!this.pinHash; },
+  touch() { this.lastActivity = Date.now(); },
+  checkTimeout() {
+    if (!this.unlocked) return;
+    const elapsed = (Date.now() - this.lastActivity) / 60000;
+    if (elapsed >= this.lockTimeoutMin) App.lockNow();
+  }
+};
+
+/* ============================================================
+   UI & App Controller
+   ============================================================ */
+const App = {
+  currentPage: 'dashboard',
+  currentPatientId: null,
+  history: [],
+  pinBuffer: '',
+  medRows: 0,
+
+  async init() {
+    showLoading(true);
+    try {
+      await DB.init();
+      await AuthService.load();
+      await ListConfig.load();
+      this.setupPinPad();
+      this.setupTabs();
+      this.setupActivityWatch();
+      this.setupOtherSelects();
+      ListConfig.populateAllFormSelects();
+      if (!AuthService.hasPin()) {
+        document.getElementById('lockScreen').querySelector('.lock-sub').textContent = 'برای اولین ورود یک PIN چهار تا شش رقمی تعریف کنید';
+      }
+      // Auto unlock if no pin set yet for demo convenience - still show lock
+      const patients = await PatientService.all();
+      if (patients.length === 0) {
+        // keep lock
+      }
+    } catch (e) {
+      console.error(e);
+      toast('خطا در راه‌اندازی پایگاه داده', 'error');
+    }
+    showLoading(false);
+  },
+
+  setupPinPad() {
+    const pad = document.getElementById('pinPad');
+    const keys = ['1','2','3','4','5','6','7','8','9','','0','⌫'];
+    pad.innerHTML = keys.map(k => {
+      if (k === '') return '<div></div>';
+      return `<button class="pin-key" data-k="${k}">${k}</button>`;
+    }).join('');
+    pad.addEventListener('click', (e) => {
+      const k = e.target.dataset.k;
+      if (!k) return;
+      if (k === '⌫') {
+        this.pinBuffer = this.pinBuffer.slice(0, -1);
+      } else if (this.pinBuffer.length < 6) {
+        this.pinBuffer += k;
+      }
+      this.updatePinDots();
+      if (this.pinBuffer.length >= 4) {
+        // auto try when 4+ digits and user stops, but we try on 4,5,6
+        this.tryPin();
+      }
+    });
+  },
+
+  updatePinDots() {
+    const dots = document.querySelectorAll('#pinDots .pin-dot');
+    dots.forEach((d, i) => d.classList.toggle('filled', i < this.pinBuffer.length));
+  },
+
+  async tryPin() {
+    if (this.pinBuffer.length < 4) return;
+    const ok = await AuthService.verify(this.pinBuffer);
+    if (ok) {
+      AuthService.unlocked = true;
+      AuthService.touch();
+      document.getElementById('lockScreen').classList.add('hidden');
+      this.pinBuffer = '';
+      this.updatePinDots();
+      document.getElementById('pinError').textContent = '';
+      await this.refreshDashboard();
+    } else {
+      if (this.pinBuffer.length >= 6 || (AuthService.hasPin() && this.pinBuffer.length >= 4)) {
+        document.getElementById('pinError').textContent = 'رمز اشتباه است';
+        this.pinBuffer = '';
+        this.updatePinDots();
+        setTimeout(() => document.getElementById('pinError').textContent = '', 2000);
+      }
+    }
+  },
+
+  lockNow() {
+    AuthService.unlocked = false;
+    this.pinBuffer = '';
+    this.updatePinDots();
+    document.getElementById('lockScreen').classList.remove('hidden');
+    document.getElementById('pinError').textContent = '';
+  },
+
+  setupActivityWatch() {
+    ['click','touchstart','keydown','scroll'].forEach(ev => {
+      document.addEventListener(ev, () => AuthService.touch(), { passive: true });
+    });
+    setInterval(() => AuthService.checkTimeout(), 15000);
+  },
+
+  setupTabs() {
+    document.getElementById('patientTabs').addEventListener('click', (e) => {
+      const tab = e.target.closest('.tab');
+      if (!tab) return;
+      document.querySelectorAll('#patientTabs .tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      this.renderPatientTab(tab.dataset.tab);
+    });
+  },
+
+  setupOtherSelects() {
+    const pairs = [
+      ['ef_cc', 'ef_cc_other_wrap'],
+      ['ef_dxPrimary', 'ef_dx_other_wrap'],
+      ['ef_advice', 'ef_advice_other_wrap'],
+      ['ef_followup', 'ef_followup_other_wrap']
+    ];
+    pairs.forEach(([selId, wrapId]) => {
+      const sel = document.getElementById(selId);
+      if (!sel) return;
+      sel.addEventListener('change', () => {
+        const wrap = document.getElementById(wrapId);
+        if (wrap) wrap.style.display = (sel.value === 'سایر') ? 'block' : 'none';
+      });
+    });
+  },
+
+  navigate(page, push = true) {
+    if (push && this.currentPage !== page) this.history.push(this.currentPage);
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const el = document.getElementById('page-' + page);
+    if (el) el.classList.add('active');
+    this.currentPage = page;
+    // nav
+    document.querySelectorAll('.nav-item').forEach(n => {
+      n.classList.toggle('active', n.dataset.page === page);
+    });
+    const titles = {
+      dashboard: 'داشبورد', search: 'جستجوی بیمار', 'patient-form': 'ثبت / ویرایش بیمار',
+      patient: 'پرونده بیمار', 'encounter-form': 'ثبت مراجعه', appointments: 'نوبت‌ها',
+      reports: 'گزارش‌ها', settings: 'تنظیمات'
+    };
+    document.getElementById('headerTitle').textContent = titles[page] || 'مطب';
+    document.getElementById('btnBack').style.display = (page === 'dashboard') ? 'none' : 'flex';
+    if (page === 'dashboard') this.refreshDashboard();
+    if (page === 'search') { document.getElementById('searchInput').value = ''; this.doSearch(); }
+    if (page === 'appointments') this.refreshAppointments();
+    if (page === 'reports') this.refreshReports();
+    if (page === 'patient-form') {
+      ListConfig.populateAllFormSelects();
+      if (!document.getElementById('pf_id').value) this.resetPatientForm();
+    }
+    if (page === 'encounter-form') {
+      ListConfig.populateAllFormSelects();
+    }
+    if (page === 'settings') {
+      this.renderListManager();
+    }
+    window.scrollTo(0, 0);
+  },
+
+  goBack() {
+    const prev = this.history.pop() || 'dashboard';
+    this.navigate(prev, false);
+  },
+
+  toggleTheme() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    if (isDark) {
+      document.documentElement.removeAttribute('data-theme');
+      DB.put('settings', { key: 'theme', value: 'light' });
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      DB.put('settings', { key: 'theme', value: 'dark' });
+    }
+  },
+
+  /* ---- Dashboard ---- */
+  async refreshDashboard() {
+    const patients = await PatientService.all();
+    const todayEnc = await EncounterService.today();
+    const todayAppts = await AppointmentService.today();
+    const todayPids = new Set(todayEnc.map(e => e.patientId));
+    document.getElementById('statTotalPatients').textContent = patients.length;
+    document.getElementById('statTodayPatients').textContent = todayPids.size;
+    document.getElementById('statTodayEncounters').textContent = todayEnc.length;
+    document.getElementById('statTodayAppts').textContent = todayAppts.length;
+
+    const recent = patients.sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || '')).slice(0, 8);
+    document.getElementById('recentPatients').innerHTML = recent.length
+      ? recent.map(p => this.patientCardHtml(p)).join('')
+      : '<div class="empty-state"><div class="icon">👤</div><p>هنوز بیماری ثبت نشده</p><button class="btn btn-primary" onclick="App.navigate(\'patient-form\')">ثبت اولین بیمار</button></div>';
+
+    if (todayEnc.length === 0) {
+      document.getElementById('todayEncounters').innerHTML = '<div class="text-muted text-center" style="padding:16px">مراجعه‌ای برای امروز ثبت نشده</div>';
+    } else {
+      let html = '';
+      for (const e of todayEnc) {
+        const p = await PatientService.get(e.patientId);
+        html += `<div class="patient-card" onclick="App.openPatient('${e.patientId}')">
+          <div class="patient-avatar">${(p?.firstName||'?')[0]}</div>
+          <div class="patient-info">
+            <div class="name">${Utils.escapeHtml((p?.firstName||'') + ' ' + (p?.lastName||''))}</div>
+            <div class="meta">${Utils.escapeHtml(e.cc || '')} · ${e.time || ''}</div>
+          </div>
+        </div>`;
+      }
+      document.getElementById('todayEncounters').innerHTML = html;
+    }
+  },
+
+  patientCardHtml(p) {
+    const age = p.birthDate ? Jalali.ageFromJalali(p.birthDate) : (p.age || '');
+    return `<div class="patient-card" onclick="App.openPatient('${p.id}')">
+      <div class="patient-avatar">${(p.firstName||'?')[0]}</div>
+      <div class="patient-info">
+        <div class="name">${Utils.escapeHtml(p.firstName + ' ' + p.lastName)}</div>
+        <div class="meta">${Utils.genderLabel(p.gender)} · ${age ? age + ' ساله' : ''} · ${p.fileNumber || ''} ${p.allergies ? '· <span class="badge badge-danger">حساسیت</span>' : ''}</div>
+      </div>
+    </div>`;
+  },
+
+  /* ---- Search ---- */
+  async doSearch() {
+    const q = document.getElementById('searchInput').value;
+    const results = await PatientService.search(q);
+    const box = document.getElementById('searchResults');
+    if (!results.length) {
+      box.innerHTML = '<div class="empty-state"><div class="icon">🔍</div><p>نتیجه‌ای یافت نشد</p></div>';
+      return;
+    }
+    box.innerHTML = results.map(p => this.patientCardHtml(p)).join('');
+  },
+
+  /* ---- Patient Form ---- */
+  resetPatientForm() {
+    document.getElementById('patientForm').reset();
+    document.getElementById('pf_id').value = '';
+  },
+
+  calcAge() {
+    const bd = document.getElementById('pf_birthDate').value;
+    document.getElementById('pf_age').value = Jalali.ageFromJalali(bd);
+  },
+
+  async savePatient(ev) {
+    ev.preventDefault();
+    const id = document.getElementById('pf_id').value || null;
+    const nationalId = document.getElementById('pf_nationalId').value.trim();
+    if (nationalId) {
+      const existing = await PatientService.findByNationalId(nationalId);
+      if (existing && existing.id !== id) {
+        toast('بیمار با این کد ملی قبلاً ثبت شده است', 'error');
+        return false;
+      }
+    }
+    const p = {
+      id: id || undefined,
+      firstName: document.getElementById('pf_firstName').value.trim(),
+      lastName: document.getElementById('pf_lastName').value.trim(),
+      nationalId,
+      gender: document.getElementById('pf_gender').value,
+      birthDate: document.getElementById('pf_birthDate').value.trim(),
+      age: document.getElementById('pf_age').value,
+      mobile: document.getElementById('pf_mobile').value.trim(),
+      phone: document.getElementById('pf_phone').value.trim(),
+      address: document.getElementById('pf_address').value.trim(),
+      occupation: document.getElementById('pf_occupation').value.trim(),
+      marital: document.getElementById('pf_marital').value,
+      bloodType: document.getElementById('pf_bloodType').value,
+      allergies: document.getElementById('pf_allergies').value.trim(),
+      chronic: document.getElementById('pf_chronic').value.trim(),
+      surgeries: document.getElementById('pf_surgeries').value.trim(),
+      hospitalizations: document.getElementById('pf_hospitalizations').value.trim(),
+      familyHx: document.getElementById('pf_familyHx').value.trim(),
+      currentMeds: document.getElementById('pf_currentMeds').value.trim(),
+      smoking: document.getElementById('pf_smoking').value,
+      alcohol: document.getElementById('pf_alcohol').value,
+      notes: document.getElementById('pf_notes').value.trim()
+    };
+    if (id) {
+      const old = await PatientService.get(id);
+      if (old) { p.fileNumber = old.fileNumber; p.createdAt = old.createdAt; }
+    }
+    showLoading(true);
+    try {
+      const saved = await PatientService.save(p);
+      // Link pending appointment from پذیرش if any
+      if (this._pendingApptId) {
+        const appt = await DB.get('appointments', this._pendingApptId);
+        if (appt) {
+          appt.patientId = saved.id;
+          appt.status = 'arrived';
+          await AppointmentService.save(appt);
+        }
+        this._pendingApptId = null;
+      }
+      toast('بیمار با موفقیت ذخیره شد', 'success');
+      this.openPatient(saved.id);
+    } catch (e) {
+      toast('خطا در ذخیره: ' + e.message, 'error');
+    }
+    showLoading(false);
+    return false;
+  },
+
+  async openPatient(id) {
+    this.currentPatientId = id;
+    const p = await PatientService.get(id);
+    if (!p) { toast('بیمار یافت نشد', 'error'); return; }
+    const age = p.birthDate ? Jalali.ageFromJalali(p.birthDate) : p.age;
+    document.getElementById('patientSummary').innerHTML = `
+      <div class="ps-name">${Utils.escapeHtml(p.firstName + ' ' + p.lastName)}</div>
+      <div class="ps-meta">${Utils.genderLabel(p.gender)} · ${age ? age + ' ساله' : ''} · پرونده: ${p.fileNumber || '—'} · ${p.mobile || ''}</div>
+      <div class="ps-alerts">
+        ${p.allergies ? `<span>⚠️ حساسیت: ${Utils.escapeHtml(p.allergies.slice(0,40))}</span>` : ''}
+        ${p.chronic ? `<span>🏥 ${Utils.escapeHtml(p.chronic.slice(0,40))}</span>` : ''}
+        ${p.bloodType ? `<span>🩸 ${p.bloodType}</span>` : ''}
+      </div>`;
+    document.querySelectorAll('#patientTabs .tab').forEach((t, i) => t.classList.toggle('active', i === 0));
+    this.navigate('patient');
+    this.renderPatientTab('info');
+  },
+
+  async renderPatientTab(tab) {
+    const pid = this.currentPatientId;
+    const box = document.getElementById('patientTabContent');
+    if (tab === 'info') {
+      const p = await PatientService.get(pid);
+      box.innerHTML = `
+        <div class="card">
+          <div class="card-title">اطلاعات پایه</div>
+          <p><strong>کد ملی:</strong> ${Utils.escapeHtml(p.nationalId||'—')}</p>
+          <p><strong>تاریخ تولد:</strong> ${Utils.escapeHtml(p.birthDate||'—')}</p>
+          <p><strong>تلفن:</strong> ${Utils.escapeHtml(p.phone||'—')}</p>
+          <p><strong>آدرس:</strong> ${Utils.escapeHtml(p.address||'—')}</p>
+          <p><strong>شغل:</strong> ${Utils.escapeHtml(p.occupation||'—')}</p>
+          <p><strong>وضعیت تأهل:</strong> ${Utils.maritalLabel(p.marital)}</p>
+          <p><strong>گروه خونی:</strong> ${p.bloodType||'—'}</p>
+        </div>
+        <div class="card">
+          <div class="card-title">سوابق پزشکی</div>
+          <p><strong>حساسیت‌ها:</strong> ${Utils.escapeHtml(p.allergies||'—')}</p>
+          <p><strong>بیماری‌های زمینه‌ای:</strong> ${Utils.escapeHtml(p.chronic||'—')}</p>
+          <p><strong>سابقه جراحی:</strong> ${Utils.escapeHtml(p.surgeries||'—')}</p>
+          <p><strong>سابقه بستری:</strong> ${Utils.escapeHtml(p.hospitalizations||'—')}</p>
+          <p><strong>سابقه خانوادگی:</strong> ${Utils.escapeHtml(p.familyHx||'—')}</p>
+          <p><strong>داروهای فعلی:</strong> ${Utils.escapeHtml(p.currentMeds||'—')}</p>
+          <p><strong>سیگار:</strong> ${Utils.smokingLabel(p.smoking)} · <strong>الکل:</strong> ${p.alcohol==='no'?'خیر':p.alcohol==='yes'?'بله':'گاه‌گاهی'}</p>
+          <p><strong>توضیحات:</strong> ${Utils.escapeHtml(p.notes||'—')}</p>
+        </div>`;
+    } else if (tab === 'encounters') {
+      const list = await EncounterService.byPatient(pid);
+      if (!list.length) {
+        box.innerHTML = '<div class="empty-state"><div class="icon">📋</div><p>مراجعه‌ای ثبت نشده</p><button class="btn btn-primary" onclick="App.openEncounterForm()">ثبت مراجعه</button></div>';
+        return;
+      }
+      box.innerHTML = '<div class="timeline">' + list.map(e => `
+        <div class="timeline-item">
+          <div class="timeline-date">${Utils.escapeHtml(e.date)} ${e.time||''}</div>
+          <div class="timeline-content">
+            <strong>${Utils.escapeHtml(e.cc||'')}</strong>
+            <div class="text-muted" style="font-size:0.85rem;margin-top:4px">تشخیص: ${Utils.escapeHtml(e.dxPrimary||'—')}</div>
+            ${e.vitals ? `<div style="font-size:0.8rem;margin-top:4px">BP: ${e.vitals.bp||'—'} · PR: ${e.vitals.pulse||'—'} · T: ${e.vitals.temp||'—'}</div>` : ''}
+            <div class="btn-group mt-1">
+              <button class="btn btn-outline btn-sm" onclick="App.viewEncounter('${e.id}')">مشاهده</button>
+              <button class="btn btn-secondary btn-sm" onclick="App.editEncounter('${e.id}')">✏️ ویرایش</button>
+              <button class="btn btn-outline btn-sm" onclick="App.printEncounter('${e.id}')">چاپ</button>
+              <button class="btn btn-danger btn-sm" onclick="App.confirmDeleteEncounter('${e.id}')">🗑️</button>
+            </div>
+          </div>
+        </div>`).join('') + '</div>';
+    } else if (tab === 'meds') {
+      const list = await EncounterService.byPatient(pid);
+      let meds = [];
+      list.forEach(e => { if (e.medications && e.medications.length) meds = meds.concat(e.medications.map(m => ({...m, date: e.date}))); });
+      if (!meds.length) { box.innerHTML = '<div class="empty-state"><p>دارویی ثبت نشده</p></div>'; return; }
+      box.innerHTML = meds.map(m => `
+        <div class="card" style="padding:12px">
+          <strong>${Utils.escapeHtml(m.name)}</strong> — ${Utils.escapeHtml(m.dose||'')} ${Utils.escapeHtml(m.form||'')}
+          <div class="text-muted" style="font-size:0.8rem">${Utils.escapeHtml(m.freq||'')} · ${Utils.escapeHtml(m.duration||'')} · ${m.date||''}</div>
+          ${m.instruction ? `<div style="font-size:0.85rem">${Utils.escapeHtml(m.instruction)}</div>` : ''}
+        </div>`).join('');
+    } else if (tab === 'labs') {
+      const list = await EncounterService.byPatient(pid);
+      let labs = [];
+      list.forEach(e => { if (e.labs && e.labs.length) labs = labs.concat(e.labs.map(l => ({...l, date: e.date}))); });
+      box.innerHTML = `
+        <button class="btn btn-secondary btn-sm mb-1" onclick="App.addLabModal()">+ ثبت آزمایش</button>
+        ${labs.length ? labs.map(l => `
+          <div class="card" style="padding:12px">
+            <strong>${Utils.escapeHtml(l.name)}</strong>
+            <div>${Utils.escapeHtml(l.result||'')} ${Utils.escapeHtml(l.unit||'')} <span class="text-muted">(${Utils.escapeHtml(l.normal||'')})</span></div>
+            <div class="text-muted" style="font-size:0.8rem">${l.date||''}</div>
+          </div>`).join('') : '<div class="empty-state"><p>آزمایشی ثبت نشده</p></div>'}`;
+    } else if (tab === 'files') {
+      const files = await FileService.byPatient(pid);
+      box.innerHTML = `
+        <div class="form-group">
+          <label>افزودن فایل (تصویر / PDF)</label>
+          <input type="file" class="form-control" id="fileUpload" accept="image/*,.pdf" onchange="App.uploadFile(event)">
+        </div>
+        ${files.length ? files.map(f => `
+          <div class="file-item">
+            <span class="file-icon">${f.type && f.type.includes('pdf') ? '📄' : '🖼️'}</span>
+            <span class="file-name">${Utils.escapeHtml(f.name)}</span>
+            <button class="btn btn-outline btn-sm" onclick="App.viewFile('${f.id}')">مشاهده</button>
+            <button class="btn btn-danger btn-sm" onclick="App.deleteFile('${f.id}')">حذف</button>
+          </div>`).join('') : '<div class="empty-state"><p>فایلی پیوست نشده</p></div>'}`;
+    } else if (tab === 'notes') {
+      const p = await PatientService.get(pid);
+      const list = await EncounterService.byPatient(pid);
+      let notes = [];
+      if (p.notes) notes.push({ date: 'عمومی', text: p.notes });
+      list.forEach(e => { if (e.notes) notes.push({ date: e.date, text: e.notes }); });
+      box.innerHTML = notes.length ? notes.map(n => `
+        <div class="card" style="padding:12px">
+          <div class="text-muted" style="font-size:0.8rem">${Utils.escapeHtml(n.date)}</div>
+          <div>${Utils.escapeHtml(n.text)}</div>
+        </div>`).join('') : '<div class="empty-state"><p>یادداشتی نیست</p></div>';
+    } else if (tab === 'followups') {
+      const list = await EncounterService.byPatient(pid);
+      const fus = list.filter(e => e.followup);
+      box.innerHTML = fus.length ? fus.map(e => `
+        <div class="card" style="padding:12px">
+          <strong>${Utils.escapeHtml(e.date)}</strong> — ${Utils.escapeHtml(e.followup)}
+          <div class="text-muted" style="font-size:0.85rem">${Utils.escapeHtml(e.cc||'')}</div>
+        </div>`).join('') : '<div class="empty-state"><p>پیگیری ثبت‌شده‌ای نیست</p></div>';
+    }
+  },
+
+  async editCurrentPatient() {
+    const p = await PatientService.get(this.currentPatientId);
+    if (!p) return;
+    document.getElementById('pf_id').value = p.id;
+    document.getElementById('pf_firstName').value = p.firstName || '';
+    document.getElementById('pf_lastName').value = p.lastName || '';
+    document.getElementById('pf_nationalId').value = p.nationalId || '';
+    document.getElementById('pf_gender').value = p.gender || '';
+    document.getElementById('pf_birthDate').value = p.birthDate || '';
+    document.getElementById('pf_age').value = p.age || '';
+    document.getElementById('pf_mobile').value = p.mobile || '';
+    document.getElementById('pf_phone').value = p.phone || '';
+    document.getElementById('pf_address').value = p.address || '';
+    document.getElementById('pf_occupation').value = p.occupation || '';
+    document.getElementById('pf_marital').value = p.marital || '';
+    document.getElementById('pf_bloodType').value = p.bloodType || '';
+    document.getElementById('pf_allergies').value = p.allergies || '';
+    document.getElementById('pf_chronic').value = p.chronic || '';
+    document.getElementById('pf_surgeries').value = p.surgeries || '';
+    document.getElementById('pf_hospitalizations').value = p.hospitalizations || '';
+    document.getElementById('pf_familyHx').value = p.familyHx || '';
+    document.getElementById('pf_currentMeds').value = p.currentMeds || '';
+    document.getElementById('pf_smoking').value = p.smoking || 'no';
+    document.getElementById('pf_alcohol').value = p.alcohol || 'no';
+    document.getElementById('pf_notes').value = p.notes || '';
+    this.navigate('patient-form');
+  },
+
+  confirmDeletePatient() {
+    showModal(`
+      <div class="modal-header"><h2>حذف بیمار</h2><button class="modal-close" onclick="App.closeModal()">×</button></div>
+      <p>آیا از حذف کامل این بیمار و تمام مراجعات و فایل‌های او مطمئن هستید؟ این عمل غیرقابل بازگشت است.</p>
+      <div class="btn-group mt-2">
+        <button class="btn btn-danger btn-block" onclick="App.doDeletePatient()">بله، حذف شود</button>
+        <button class="btn btn-outline btn-block" onclick="App.closeModal()">انصراف</button>
+      </div>`);
+  },
+
+  async doDeletePatient() {
+    showLoading(true);
+    await PatientService.remove(this.currentPatientId);
+    this.closeModal();
+    toast('بیمار حذف شد', 'success');
+    this.navigate('dashboard');
+    showLoading(false);
+  },
+
+  /* ---- Encounter ---- */
+  openEncounterForm(encId) {
+    document.getElementById('encounterForm').reset();
+    document.getElementById('ef_id').value = encId || '';
+    document.getElementById('ef_patientId').value = this.currentPatientId;
+    document.getElementById('ef_date').value = Jalali.todayStr();
+    const now = new Date();
+    document.getElementById('ef_time').value = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+    document.getElementById('medsList').innerHTML = '';
+    this.medRows = 0;
+    // hide other wraps
+    ['ef_cc_other_wrap','ef_dx_other_wrap','ef_advice_other_wrap','ef_followup_other_wrap'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+    this.addMedRow();
+    this.navigate('encounter-form');
+  },
+
+  async editEncounter(encId) {
+    const e = await EncounterService.get(encId);
+    if (!e) { toast('مراجعه یافت نشد', 'error'); return; }
+    this.currentPatientId = e.patientId;
+    ListConfig.populateAllFormSelects();
+    document.getElementById('encounterForm').reset();
+    document.getElementById('ef_id').value = e.id;
+    document.getElementById('ef_patientId').value = e.patientId;
+    document.getElementById('ef_date').value = e.date || Jalali.todayStr();
+    document.getElementById('ef_time').value = e.time || '';
+
+    const setSelectOrOther = (selId, otherWrapId, otherId, value) => {
+      const sel = document.getElementById(selId);
+      const wrap = document.getElementById(otherWrapId);
+      const other = document.getElementById(otherId);
+      if (!sel) return;
+      const opts = Array.from(sel.options).map(o => o.value);
+      if (value && opts.includes(value)) {
+        sel.value = value;
+        if (wrap) wrap.style.display = 'none';
+      } else if (value) {
+        if (opts.includes('سایر')) sel.value = 'سایر';
+        else {
+          const opt = document.createElement('option');
+          opt.value = value; opt.textContent = value; opt.selected = true;
+          sel.appendChild(opt);
+        }
+        if (wrap) wrap.style.display = 'block';
+        if (other) other.value = value;
+      } else {
+        sel.value = '';
+        if (wrap) wrap.style.display = 'none';
+      }
+    };
+
+    setSelectOrOther('ef_cc', 'ef_cc_other_wrap', 'ef_cc_other', e.cc);
+    document.getElementById('ef_hpi').value = e.hpi || '';
+    document.getElementById('ef_symptoms').value = e.symptoms || '';
+    const v = e.vitals || {};
+    document.getElementById('ef_bp').value = v.bp || '';
+    document.getElementById('ef_pulse').value = v.pulse || '';
+    document.getElementById('ef_rr').value = v.rr || '';
+    document.getElementById('ef_temp').value = v.temp || '';
+    document.getElementById('ef_spo2').value = v.spo2 || '';
+    document.getElementById('ef_weight').value = v.weight || '';
+    document.getElementById('ef_height').value = v.height || '';
+    document.getElementById('ef_bmi').value = v.bmi || '';
+    document.getElementById('ef_exam').value = e.exam || '';
+    document.getElementById('ef_assessment').value = e.assessment || '';
+    setSelectOrOther('ef_dxPrimary', 'ef_dx_other_wrap', 'ef_dx_other', e.dxPrimary);
+    const dxSec = document.getElementById('ef_dxSecondary');
+    if (dxSec) {
+      if (e.dxSecondary && !Array.from(dxSec.options).some(o => o.value === e.dxSecondary)) {
+        const opt = document.createElement('option');
+        opt.value = e.dxSecondary; opt.textContent = e.dxSecondary; opt.selected = true;
+        dxSec.appendChild(opt);
+      } else dxSec.value = e.dxSecondary || '';
+    }
+    document.getElementById('ef_icd').value = e.icd || '';
+    document.getElementById('ef_plan').value = e.plan || '';
+    setSelectOrOther('ef_advice', 'ef_advice_other_wrap', 'ef_advice_other', e.advice);
+    setSelectOrOther('ef_followup', 'ef_followup_other_wrap', 'ef_followup_other', e.followup);
+    document.getElementById('ef_notes').value = e.notes || '';
+
+    document.getElementById('medsList').innerHTML = '';
+    this.medRows = 0;
+    const meds = e.medications || [];
+    if (meds.length) meds.forEach(m => this.addMedRow(m));
+    else this.addMedRow();
+
+    this.navigate('encounter-form');
+  },
+
+  confirmDeleteEncounter(encId) {
+    showModal(`
+      <div class="modal-header"><h2>حذف مراجعه</h2><button class="modal-close" onclick="App.closeModal()">×</button></div>
+      <p>آیا از حذف این مراجعه مطمئن هستید؟ این عمل غیرقابل بازگشت است.</p>
+      <div class="btn-group mt-2">
+        <button class="btn btn-danger btn-block" onclick="App.doDeleteEncounter('${encId}')">بله، حذف شود</button>
+        <button class="btn btn-outline btn-block" onclick="App.closeModal()">انصراف</button>
+      </div>`);
+  },
+
+  async doDeleteEncounter(encId) {
+    showLoading(true);
+    try {
+      await EncounterService.remove(encId);
+      this.closeModal();
+      toast('مراجعه حذف شد', 'success');
+      if (this.currentPatientId) {
+        this.openPatient(this.currentPatientId);
+        // ensure encounters tab
+        document.querySelectorAll('#patientTabs .tab').forEach(t => t.classList.toggle('active', t.dataset.tab === 'encounters'));
+        this.renderPatientTab('encounters');
+      } else {
+        this.navigate('dashboard');
+      }
+    } catch (err) {
+      toast('خطا در حذف: ' + err.message, 'error');
+    }
+    showLoading(false);
+  },
+
+  calcBMI() {
+    const w = parseFloat(document.getElementById('ef_weight').value);
+    const h = parseFloat(document.getElementById('ef_height').value);
+    if (w > 0 && h > 0) {
+      const bmi = (w / ((h / 100) ** 2)).toFixed(1);
+      document.getElementById('ef_bmi').value = bmi;
+    }
+  },
+
+  addMedRow(data) {
+    this.medRows++;
+    const id = this.medRows;
+    const d = data || {};
+    const commonMeds = ListConfig.get('medications');
+    const medOpts = commonMeds.map(m => `<option value="${Utils.escapeHtml(m)}" ${d.name===m?'selected':''}>${Utils.escapeHtml(m)}</option>`).join('');
+    const freqOpts = [''].concat(ListConfig.get('medFreqs')).map(f =>
+      `<option value="${Utils.escapeHtml(f)}" ${d.freq===f?'selected':''}>${f ? Utils.escapeHtml(f) : '— انتخاب —'}</option>`).join('');
+    const durOpts = [''].concat(ListConfig.get('medDurations')).map(f =>
+      `<option value="${Utils.escapeHtml(f)}" ${d.duration===f?'selected':''}>${f ? Utils.escapeHtml(f) : '— انتخاب —'}</option>`).join('');
+    const formOpts = ListConfig.get('medForms').map(f =>
+      `<option value="${Utils.escapeHtml(f)}" ${d.form===f?'selected':''}>${Utils.escapeHtml(f)}</option>`).join('');
+    const routeOpts = ListConfig.get('medRoutes').map(f =>
+      `<option value="${Utils.escapeHtml(f)}" ${d.route===f?'selected':''}>${Utils.escapeHtml(f)}</option>`).join('');
+    const instOpts = ListConfig.get('medInstructions').map(f =>
+      `<option value="${Utils.escapeHtml(f)}" ${d.instruction===f?'selected':''}>${Utils.escapeHtml(f)}</option>`).join('');
+    const html = `
+      <div class="card" style="padding:10px;margin-bottom:8px" id="medRow${id}">
+        <div class="form-row">
+          <div class="form-group"><label>نام دارو</label>
+            <select class="form-control" id="med_name_${id}" onchange="App.onMedNameChange(${id})">
+              <option value="">— انتخاب دارو —</option>
+              ${medOpts}
+            </select>
+          </div>
+          <div class="form-group"><label>شکل</label>
+            <select class="form-control" id="med_form_${id}">
+              <option value="">—</option>
+              ${formOpts}
+            </select>
+          </div>
+        </div>
+        <div class="form-group" id="med_name_other_wrap_${id}" style="display:${d.name && !commonMeds.includes(d.name)?'block':'none'}">
+          <label>نام دارو (دستی)</label><input class="form-control" id="med_name_other_${id}" value="${Utils.escapeHtml(d.name && !commonMeds.includes(d.name)?d.name:'')}">
+        </div>
+        <div class="form-row-3">
+          <div class="form-group"><label>دوز</label><input class="form-control" id="med_dose_${id}" value="${Utils.escapeHtml(d.dose||'')}" placeholder="500mg"></div>
+          <div class="form-group"><label>تعداد</label><input class="form-control" id="med_qty_${id}" value="${Utils.escapeHtml(d.qty||'')}"></div>
+          <div class="form-group"><label>دفعات</label>
+            <select class="form-control" id="med_freq_${id}">${freqOpts}</select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>مسیر</label>
+            <select class="form-control" id="med_route_${id}">
+              <option value="">—</option>
+              ${routeOpts}
+            </select>
+          </div>
+          <div class="form-group"><label>مدت</label>
+            <select class="form-control" id="med_duration_${id}">${durOpts}</select>
+          </div>
+        </div>
+        <div class="form-group"><label>دستور مصرف</label>
+          <select class="form-control" id="med_inst_${id}">
+            <option value="">—</option>
+            ${instOpts}
+          </select>
+        </div>
+        <button type="button" class="btn btn-danger btn-sm" onclick="document.getElementById('medRow${id}').remove()">حذف دارو</button>
+      </div>`;
+    document.getElementById('medsList').insertAdjacentHTML('beforeend', html);
+  },
+
+  onMedNameChange(id) {
+    const sel = document.getElementById('med_name_' + id);
+    const wrap = document.getElementById('med_name_other_wrap_' + id);
+    if (wrap) wrap.style.display = (sel && sel.value === 'سایر') ? 'block' : 'none';
+  },
+
+  collectMeds() {
+    const meds = [];
+    document.querySelectorAll('[id^="medRow"]').forEach(row => {
+      const id = row.id.replace('medRow', '');
+      let name = document.getElementById('med_name_' + id)?.value?.trim();
+      if (!name) return;
+      if (name === 'سایر') {
+        name = document.getElementById('med_name_other_' + id)?.value?.trim() || 'سایر';
+      }
+      meds.push({
+        name,
+        form: document.getElementById('med_form_' + id)?.value || '',
+        dose: document.getElementById('med_dose_' + id)?.value || '',
+        qty: document.getElementById('med_qty_' + id)?.value || '',
+        freq: document.getElementById('med_freq_' + id)?.value || '',
+        route: document.getElementById('med_route_' + id)?.value || '',
+        duration: document.getElementById('med_duration_' + id)?.value || '',
+        instruction: document.getElementById('med_inst_' + id)?.value || ''
+      });
+    });
+    return meds;
+  },
+
+  async saveEncounter(ev) {
+    ev.preventDefault();
+    const resolveOther = (selId, otherId) => {
+      const v = document.getElementById(selId)?.value?.trim() || '';
+      if (v === 'سایر') return document.getElementById(otherId)?.value?.trim() || 'سایر';
+      return v;
+    };
+    const e = {
+      id: document.getElementById('ef_id').value || undefined,
+      patientId: document.getElementById('ef_patientId').value,
+      date: document.getElementById('ef_date').value.trim(),
+      time: document.getElementById('ef_time').value,
+      cc: resolveOther('ef_cc', 'ef_cc_other'),
+      hpi: document.getElementById('ef_hpi').value.trim(),
+      symptoms: document.getElementById('ef_symptoms').value.trim(),
+      vitals: {
+        bp: document.getElementById('ef_bp').value.trim(),
+        pulse: document.getElementById('ef_pulse').value,
+        rr: document.getElementById('ef_rr').value,
+        temp: document.getElementById('ef_temp').value,
+        spo2: document.getElementById('ef_spo2').value,
+        weight: document.getElementById('ef_weight').value,
+        height: document.getElementById('ef_height').value,
+        bmi: document.getElementById('ef_bmi').value
+      },
+      exam: document.getElementById('ef_exam').value.trim(),
+      assessment: document.getElementById('ef_assessment').value.trim(),
+      dxPrimary: resolveOther('ef_dxPrimary', 'ef_dx_other'),
+      dxSecondary: document.getElementById('ef_dxSecondary').value.trim(),
+      icd: document.getElementById('ef_icd').value.trim(),
+      plan: document.getElementById('ef_plan').value.trim(),
+      advice: resolveOther('ef_advice', 'ef_advice_other'),
+      followup: resolveOther('ef_followup', 'ef_followup_other'),
+      notes: document.getElementById('ef_notes').value.trim(),
+      medications: this.collectMeds()
+    };
+    showLoading(true);
+    try {
+      if (e.id) {
+        const old = await EncounterService.get(e.id);
+        if (old && old.createdAt) e.createdAt = old.createdAt;
+        if (old && old.labs) e.labs = old.labs; // preserve labs attached to encounter
+      }
+      await EncounterService.save(e);
+      // update patient updatedAt
+      const p = await PatientService.get(e.patientId);
+      if (p) { p.updatedAt = new Date().toISOString(); await PatientService.save(p); }
+      toast('مراجعه ذخیره شد', 'success');
+      this.openPatient(e.patientId);
+    } catch (err) {
+      toast('خطا: ' + err.message, 'error');
+    }
+    showLoading(false);
+    return false;
+  },
+
+  async viewEncounter(id) {
+    const e = await EncounterService.get(id);
+    if (!e) return;
+    showModal(`
+      <div class="modal-header"><h2>جزئیات مراجعه</h2><button class="modal-close" onclick="App.closeModal()">×</button></div>
+      <p><strong>تاریخ:</strong> ${Utils.escapeHtml(e.date)} ${e.time||''}</p>
+      <p><strong>علت:</strong> ${Utils.escapeHtml(e.cc)}</p>
+      <p><strong>شرح حال:</strong> ${Utils.escapeHtml(e.hpi||'—')}</p>
+      <p><strong>علائم حیاتی:</strong> BP ${e.vitals?.bp||'—'} · PR ${e.vitals?.pulse||'—'} · T ${e.vitals?.temp||'—'} · SpO2 ${e.vitals?.spo2||'—'} · BMI ${e.vitals?.bmi||'—'}</p>
+      <p><strong>معاینه:</strong> ${Utils.escapeHtml(e.exam||'—')}</p>
+      <p><strong>تشخیص:</strong> ${Utils.escapeHtml(e.dxPrimary)} ${e.dxSecondary ? ' / ' + Utils.escapeHtml(e.dxSecondary) : ''}</p>
+      <p><strong>ICD:</strong> ${Utils.escapeHtml(e.icd||'—')}</p>
+      <p><strong>برنامه:</strong> ${Utils.escapeHtml(e.plan||'—')}</p>
+      <p><strong>توصیه:</strong> ${Utils.escapeHtml(e.advice||'—')}</p>
+      ${e.medications && e.medications.length ? '<p><strong>داروها:</strong></p><ul>' + e.medications.map(m => `<li>${Utils.escapeHtml(m.name)} ${Utils.escapeHtml(m.dose||'')} — ${Utils.escapeHtml(m.freq||'')}</li>`).join('') + '</ul>' : ''}
+      <div class="btn-group mt-2">
+        <button class="btn btn-primary" onclick="App.closeModal();App.editEncounter('${e.id}')">✏️ ویرایش</button>
+        <button class="btn btn-secondary" onclick="App.printEncounter('${e.id}')">🖨️ چاپ گزارش</button>
+        <button class="btn btn-outline" onclick="App.printPrescription('${e.id}')">💊 چاپ نسخه</button>
+        <button class="btn btn-danger" onclick="App.closeModal();App.confirmDeleteEncounter('${e.id}')">🗑️ حذف</button>
+      </div>`);
+  },
+
+  /* ---- Files ---- */
+  async uploadFile(ev) {
+    const file = ev.target.files[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) { toast('حجم فایل حداکثر ۵ مگابایت', 'error'); return; }
+    showLoading(true);
+    const reader = new FileReader();
+    reader.onload = async () => {
+      await FileService.save({
+        patientId: this.currentPatientId,
+        name: file.name,
+        type: file.type,
+        size: file.size,
+        data: reader.result,
+        createdAt: new Date().toISOString()
+      });
+      toast('فایل ذخیره شد', 'success');
+      this.renderPatientTab('files');
+      showLoading(false);
+    };
+    reader.readAsDataURL(file);
+  },
+
+  async viewFile(id) {
+    const f = await DB.get('files', id);
+    if (!f) return;
+    if (f.type && f.type.includes('pdf')) {
+      const w = window.open();
+      w.document.write(`<iframe src="${f.data}" width="100%" height="100%" style="border:none"></iframe>`);
+    } else {
+      showModal(`<div class="modal-header"><h2>${Utils.escapeHtml(f.name)}</h2><button class="modal-close" onclick="App.closeModal()">×</button></div>
+        <img src="${f.data}" style="max-width:100%;border-radius:8px">`);
+    }
+  },
+
+  async deleteFile(id) {
+    if (!confirm('حذف فایل؟')) return;
+    await FileService.remove(id);
+    toast('حذف شد', 'success');
+    this.renderPatientTab('files');
+  },
+
+  addLabModal() {
+    showModal(`
+      <div class="modal-header"><h2>ثبت نتیجه آزمایش</h2><button class="modal-close" onclick="App.closeModal()">×</button></div>
+      <div class="form-group"><label>نام آزمایش</label><input class="form-control" id="lab_name"></div>
+      <div class="form-group"><label>نتیجه</label><input class="form-control" id="lab_result"></div>
+      <div class="form-row">
+        <div class="form-group"><label>واحد</label><input class="form-control" id="lab_unit"></div>
+        <div class="form-group"><label>محدوده نرمال</label><input class="form-control" id="lab_normal"></div>
+      </div>
+      <div class="form-group"><label>توضیحات</label><textarea class="form-control" id="lab_note" rows="2"></textarea></div>
+      <button class="btn btn-primary btn-block" onclick="App.saveLabToLatest()">ذخیره</button>`);
+  },
+
+  async saveLabToLatest() {
+    const name = document.getElementById('lab_name').value.trim();
+    if (!name) { toast('نام آزمایش الزامی است', 'error'); return; }
+    const lab = {
+      name,
+      result: document.getElementById('lab_result').value.trim(),
+      unit: document.getElementById('lab_unit').value.trim(),
+      normal: document.getElementById('lab_normal').value.trim(),
+      note: document.getElementById('lab_note').value.trim()
+    };
+    let list = await EncounterService.byPatient(this.currentPatientId);
+    if (!list.length) {
+      // create a minimal encounter
+      const e = {
+        patientId: this.currentPatientId,
+        date: Jalali.todayStr(),
+        time: '',
+        cc: 'ثبت آزمایش',
+        dxPrimary: '—',
+        labs: [lab]
+      };
+      await EncounterService.save(e);
+    } else {
+      const e = list[0];
+      e.labs = e.labs || [];
+      e.labs.push(lab);
+      await EncounterService.save(e);
+    }
+    this.closeModal();
+    toast('آزمایش ثبت شد', 'success');
+    this.renderPatientTab('labs');
+  },
+
+  /* ---- Appointments ---- */
+  async refreshAppointments() {
+    const today = await AppointmentService.today();
+    const future = await AppointmentService.future();
+    const render = async (list, elId) => {
+      if (!list.length) {
+        document.getElementById(elId).innerHTML = '<div class="text-muted text-center" style="padding:12px">موردی نیست</div>';
+        return;
+      }
+      let html = '';
+      for (const a of list) {
+        const p = a.patientId ? await PatientService.get(a.patientId) : null;
+        const statusMap = { booked: 'رزرو شده', arrived: 'مراجعه کرده', cancelled: 'لغو شده', noshow: 'عدم مراجعه' };
+        const badgeCls = { booked: 'badge-info', arrived: 'badge-success', cancelled: 'badge-danger', noshow: 'badge-warning' };
+        const displayName = p ? Utils.escapeHtml(p.firstName + ' ' + p.lastName) : Utils.escapeHtml(a.patientName || '—');
+        html += `<div class="card" style="padding:12px">
+          <div class="flex-between">
+            <strong>${a.time || ''} — ${displayName}</strong>
+            <span class="badge ${badgeCls[a.status]||'badge-info'}">${statusMap[a.status]||a.status}</span>
+          </div>
+          <div class="text-muted" style="font-size:0.85rem">${Utils.escapeHtml(a.reason||'')} · ${a.date}</div>
+          <div class="btn-group mt-1">
+            <button class="btn btn-sm btn-primary" onclick="App.admitAppointment('${a.id}')">پذیرش</button>
+            <button class="btn btn-sm btn-secondary" onclick="App.setApptStatus('${a.id}','arrived')">مراجعه کرد</button>
+            <button class="btn btn-sm btn-outline" onclick="App.setApptStatus('${a.id}','cancelled')">لغو</button>
+            <button class="btn btn-sm btn-danger" onclick="App.deleteAppt('${a.id}')">حذف</button>
+          </div>
+        </div>`;
+      }
+      document.getElementById(elId).innerHTML = html;
+    };
+    await render(today, 'todayApptsList');
+    await render(future, 'futureApptsList');
+  },
+
+  openApptForm() {
+    showModal(`
+      <div class="modal-header"><h2>نوبت جدید</h2><button class="modal-close" onclick="App.closeModal()">×</button></div>
+      <div class="form-group"><label>تاریخ شمسی</label>
+        <div class="date-input-wrap">
+          <input class="form-control" id="ap_date" value="${Jalali.todayStr()}" readonly onclick="DatePicker.open('ap_date')">
+          <button type="button" class="date-btn" onclick="DatePicker.open('ap_date')">📅</button>
+        </div>
+      </div>
+      <div class="form-group"><label>ساعت</label><input class="form-control" id="ap_time" type="time"></div>
+      <div class="form-group"><label>نام بیمار</label><input class="form-control" id="ap_patientName" placeholder="نام بیمار"></div>
+      <div class="form-group"><label>علت مراجعه</label>
+        <select class="form-control" id="ap_reason">
+          <option value="">— انتخاب —</option>
+          ${ListConfig.get('apptReasons').map(r => `<option value="${Utils.escapeHtml(r)}">${Utils.escapeHtml(r)}</option>`).join('')}
+        </select>
+      </div>
+      <button class="btn btn-primary btn-block" onclick="App.saveAppt()">ذخیره نوبت</button>`);
+  },
+
+  async saveAppt() {
+    const a = {
+      date: document.getElementById('ap_date').value.trim(),
+      time: document.getElementById('ap_time').value,
+      patientName: document.getElementById('ap_patientName').value.trim(),
+      reason: document.getElementById('ap_reason').value.trim(),
+      status: 'booked'
+    };
+    if (!a.date) { toast('تاریخ الزامی است', 'error'); return; }
+    await AppointmentService.save(a);
+    this.closeModal();
+    toast('نوبت ثبت شد', 'success');
+    this.refreshAppointments();
+  },
+
+  async setApptStatus(id, status) {
+    const a = await DB.get('appointments', id);
+    if (a) { a.status = status; await AppointmentService.save(a); this.refreshAppointments(); }
+  },
+
+  async deleteAppt(id) {
+    if (!confirm('حذف نوبت؟')) return;
+    await AppointmentService.remove(id);
+    this.refreshAppointments();
+  },
+
+  async admitAppointment(id) {
+    const a = await DB.get('appointments', id);
+    if (!a) { toast('نوبت یافت نشد', 'error'); return; }
+
+    // Mark as arrived
+    a.status = 'arrived';
+    await AppointmentService.save(a);
+
+    // If linked to patient file → open it
+    if (a.patientId) {
+      const p = await PatientService.get(a.patientId);
+      if (p) {
+        toast('پذیرش انجام شد — پرونده باز شد', 'success');
+        this.openPatient(a.patientId);
+        return;
+      }
+    }
+
+    // Try to match by patient name
+    const name = (a.patientName || '').trim();
+    if (name) {
+      const all = await PatientService.all();
+      const nameLower = name.toLowerCase();
+      const matches = all.filter(p => {
+        const full = ((p.firstName || '') + ' ' + (p.lastName || '')).trim().toLowerCase();
+        return full === nameLower || full.includes(nameLower) || nameLower.includes(full);
+      });
+      if (matches.length === 1) {
+        a.patientId = matches[0].id;
+        await AppointmentService.save(a);
+        toast('پذیرش انجام شد — پرونده یافت و باز شد', 'success');
+        this.openPatient(matches[0].id);
+        return;
+      }
+      if (matches.length > 1) {
+        // Show picker
+        let opts = matches.map(p =>
+          `<button class="btn btn-outline btn-block" style="margin-bottom:6px;text-align:right" onclick="App.closeModal();App.linkApptAndOpen('${a.id}','${p.id}')">
+            ${Utils.escapeHtml(p.firstName + ' ' + p.lastName)} · پرونده ${p.fileNumber || '—'} · ${p.mobile || ''}
+          </button>`
+        ).join('');
+        showModal(`
+          <div class="modal-header"><h2>انتخاب پرونده بیمار</h2><button class="modal-close" onclick="App.closeModal()">×</button></div>
+          <p class="text-muted mb-1">چند بیمار با نام مشابه یافت شد. یکی را انتخاب کنید یا بیمار جدید ثبت کنید:</p>
+          ${opts}
+          <button class="btn btn-primary btn-block mt-2" onclick="App.closeModal();App.admitAsNewPatient('${a.id}')">+ ثبت بیمار جدید</button>
+        `);
+        return;
+      }
+    }
+
+    // No file found → go to new patient form with name prefilled
+    await this.admitAsNewPatient(id);
+  },
+
+  async linkApptAndOpen(apptId, patientId) {
+    const a = await DB.get('appointments', apptId);
+    if (a) {
+      a.patientId = patientId;
+      a.status = 'arrived';
+      await AppointmentService.save(a);
+    }
+    toast('پذیرش انجام شد', 'success');
+    this.openPatient(patientId);
+  },
+
+  async admitAsNewPatient(apptId) {
+    const a = await DB.get('appointments', apptId);
+    this.resetPatientForm();
+    if (a && a.patientName) {
+      const parts = a.patientName.trim().split(/\s+/);
+      if (parts.length >= 2) {
+        document.getElementById('pf_firstName').value = parts[0];
+        document.getElementById('pf_lastName').value = parts.slice(1).join(' ');
+      } else {
+        document.getElementById('pf_firstName').value = a.patientName.trim();
+      }
+    }
+    // store pending appt to link after save
+    this._pendingApptId = apptId;
+    toast('بیمار پرونده ندارد — فرم ثبت بیمار باز شد', 'warning');
+    this.navigate('patient-form');
+  },
+
+  /* ---- Reports ---- */
+  _reportFilteredEncs: [],
+  _reportPatientMap: {},
+  _reportView: 'linear',
+
+  async refreshReports() {
+    // Populate filter selects from ListConfig
+    ListConfig.populateSelect('rep_cc', 'chiefComplaints', { placeholder: '— همه —' });
+    ListConfig.populateSelect('rep_dx', 'diagnoses', { placeholder: '— همه —' });
+
+    // Overall (unfiltered) summary
+    const patients = await PatientService.all();
+    const encs = await EncounterService.all();
+    const today = Jalali.todayStr();
+    const todayEnc = encs.filter(e => e.date === today);
+    const monthPrefix = today.slice(0, 7);
+    const monthEnc = encs.filter(e => e.date && e.date.startsWith(monthPrefix));
+    const yearPrefix = today.slice(0, 4);
+    const yearEnc = encs.filter(e => e.date && e.date.startsWith(yearPrefix));
+    document.getElementById('reportsContent').innerHTML = `
+      <p>کل بیماران: <strong>${patients.length}</strong></p>
+      <p>کل مراجعات: <strong>${encs.length}</strong></p>
+      <p>مراجعات امروز: <strong>${todayEnc.length}</strong></p>
+      <p>مراجعات این ماه: <strong>${monthEnc.length}</strong></p>
+      <p>مراجعات امسال: <strong>${yearEnc.length}</strong></p>
+      <p>بیماران جدید این ماه: <strong>${patients.filter(p => p.createdAt && p.createdAt.slice(0,7) === new Date().toISOString().slice(0,7)).length}</strong></p>`;
+
+    // Apply current filter (or show all if empty)
+    await this.applyReportFilter(true);
+  },
+
+  setReportPeriod(period) {
+    const today = Jalali.now();
+    const todayStr = Jalali.format(today);
+    const fromEl = document.getElementById('rep_dateFrom');
+    const toEl = document.getElementById('rep_dateTo');
+    if (period === 'today') {
+      fromEl.value = todayStr;
+      toEl.value = todayStr;
+    } else if (period === 'month') {
+      fromEl.value = `${today.jy}/${String(today.jm).padStart(2,'0')}/01`;
+      toEl.value = todayStr;
+    } else if (period === 'year') {
+      fromEl.value = `${today.jy}/01/01`;
+      toEl.value = todayStr;
+    } else {
+      fromEl.value = '';
+      toEl.value = '';
+    }
+    document.getElementById('rep_cc').value = '';
+    document.getElementById('rep_dx').value = '';
+    this.applyReportFilter();
+  },
+
+  resetReportFilter() {
+    document.getElementById('rep_dateFrom').value = '';
+    document.getElementById('rep_dateTo').value = '';
+    document.getElementById('rep_cc').value = '';
+    document.getElementById('rep_dx').value = '';
+    this.applyReportFilter();
+  },
+
+  async applyReportFilter(silent) {
+    const dateFrom = (document.getElementById('rep_dateFrom')?.value || '').trim();
+    const dateTo = (document.getElementById('rep_dateTo')?.value || '').trim();
+    const ccFilter = (document.getElementById('rep_cc')?.value || '').trim();
+    const dxFilter = (document.getElementById('rep_dx')?.value || '').trim();
+
+    const allEncs = await EncounterService.all();
+    let filtered = allEncs.filter(e => {
+      if (dateFrom && (!e.date || e.date < dateFrom)) return false;
+      if (dateTo && (!e.date || e.date > dateTo)) return false;
+      if (ccFilter && (e.cc || '') !== ccFilter) return false;
+      if (dxFilter && (e.dxPrimary || '') !== dxFilter) return false;
+      return true;
+    });
+    // Sort newest first
+    filtered.sort((a, b) => (b.date + (b.time || '')).localeCompare(a.date + (a.time || '')));
+    this._reportFilteredEncs = filtered;
+
+    // Stats
+    const uniquePatients = new Set(filtered.map(e => e.patientId).filter(Boolean));
+    const medCount = filtered.reduce((n, e) => n + (e.medications?.length || 0), 0);
+    const dxSet = new Set(filtered.map(e => e.dxPrimary).filter(Boolean));
+    document.getElementById('repStatEnc').textContent = filtered.length;
+    document.getElementById('repStatPatients').textContent = uniquePatients.size;
+    document.getElementById('repStatMeds').textContent = medCount;
+    document.getElementById('repStatDx').textContent = dxSet.size;
+
+    // Resolve patient names in batch
+    const patientMap = {};
+    for (const pid of uniquePatients) {
+      const p = await PatientService.get(pid);
+      if (p) patientMap[pid] = p;
+    }
+    this._reportPatientMap = patientMap;
+    // sync view toggle buttons
+    const cardsBtn = document.getElementById('repViewCardsBtn');
+    const linearBtn = document.getElementById('repViewLinearBtn');
+    if (cardsBtn && linearBtn) {
+      cardsBtn.className = 'btn btn-sm ' + (this._reportView === 'cards' ? 'btn-primary' : 'btn-outline');
+      linearBtn.className = 'btn btn-sm ' + (this._reportView === 'linear' ? 'btn-primary' : 'btn-outline');
+    }
+    this.renderReportResults();
+
+    // Top Dx (filtered)
+    const dxCount = {};
+    filtered.forEach(e => {
+      if (e.dxPrimary) dxCount[e.dxPrimary] = (dxCount[e.dxPrimary] || 0) + 1;
+    });
+    const topDx = Object.entries(dxCount).sort((a,b) => b[1]-a[1]).slice(0, 15);
+    document.getElementById('topDx').innerHTML = topDx.length
+      ? topDx.map(([k,v]) => `<div class="flex-between" style="padding:6px 0;border-bottom:1px solid var(--border)"><span>${Utils.escapeHtml(k)}</span><strong>${v}</strong></div>`).join('')
+      : '<p class="text-muted">داده‌ای نیست</p>';
+
+    // Top CC (filtered)
+    const ccCount = {};
+    filtered.forEach(e => {
+      if (e.cc) ccCount[e.cc] = (ccCount[e.cc] || 0) + 1;
+    });
+    const topCC = Object.entries(ccCount).sort((a,b) => b[1]-a[1]).slice(0, 15);
+    const topCCEl = document.getElementById('topCC');
+    if (topCCEl) {
+      topCCEl.innerHTML = topCC.length
+        ? topCC.map(([k,v]) => `<div class="flex-between" style="padding:6px 0;border-bottom:1px solid var(--border)"><span>${Utils.escapeHtml(k)}</span><strong>${v}</strong></div>`).join('')
+        : '<p class="text-muted">داده‌ای نیست</p>';
+    }
+
+    // Top Meds (filtered)
+    const medCountMap = {};
+    filtered.forEach(e => {
+      (e.medications || []).forEach(m => { if (m.name) medCountMap[m.name] = (medCountMap[m.name] || 0) + 1; });
+    });
+    const topMeds = Object.entries(medCountMap).sort((a,b) => b[1]-a[1]).slice(0, 15);
+    document.getElementById('topMeds').innerHTML = topMeds.length
+      ? topMeds.map(([k,v]) => `<div class="flex-between" style="padding:6px 0;border-bottom:1px solid var(--border)"><span>${Utils.escapeHtml(k)}</span><strong>${v}</strong></div>`).join('')
+      : '<p class="text-muted">داده‌ای نیست</p>';
+
+    if (!silent) toast(`گزارش: ${filtered.length} مراجعه یافت شد`, 'success');
+  },
+
+  setReportView(mode) {
+    this._reportView = mode === 'cards' ? 'cards' : 'linear';
+    const cardsBtn = document.getElementById('repViewCardsBtn');
+    const linearBtn = document.getElementById('repViewLinearBtn');
+    if (cardsBtn && linearBtn) {
+      cardsBtn.className = 'btn btn-sm ' + (this._reportView === 'cards' ? 'btn-primary' : 'btn-outline');
+      linearBtn.className = 'btn btn-sm ' + (this._reportView === 'linear' ? 'btn-primary' : 'btn-outline');
+    }
+    this.renderReportResults();
+  },
+
+  renderReportResults() {
+    const box = document.getElementById('repResults');
+    if (!box) return;
+    const filtered = this._reportFilteredEncs || [];
+    const patientMap = this._reportPatientMap || {};
+
+    if (!filtered.length) {
+      box.innerHTML = '<div class="empty-state"><div class="icon">📋</div><p>نتیجه‌ای با این فیلتر یافت نشد</p></div>';
+      return;
+    }
+
+    if (this._reportView === 'cards') {
+      box.innerHTML = filtered.map(e => {
+        const p = patientMap[e.patientId];
+        const name = p ? `${p.firstName || ''} ${p.lastName || ''}`.trim() : '—';
+        const medsStr = (e.medications || []).map(m => m.name).filter(Boolean).join('، ') || '—';
+        return `<div class="card" style="padding:12px;margin-bottom:8px">
+          <div class="flex-between" style="margin-bottom:4px">
+            <strong style="cursor:pointer;color:var(--primary)" onclick="App.openPatient('${e.patientId}')">${Utils.escapeHtml(name)}</strong>
+            <span class="text-muted" style="font-size:0.8rem">${Utils.escapeHtml(e.date || '')} ${e.time || ''}</span>
+          </div>
+          <div style="font-size:0.85rem">
+            <div><strong>شکایت:</strong> ${Utils.escapeHtml(e.cc || '—')}</div>
+            <div><strong>تشخیص:</strong> ${Utils.escapeHtml(e.dxPrimary || '—')}${e.dxSecondary ? ' / ' + Utils.escapeHtml(e.dxSecondary) : ''}</div>
+            ${e.icd ? `<div><strong>ICD:</strong> ${Utils.escapeHtml(e.icd)}</div>` : ''}
+            <div class="text-muted" style="margin-top:4px"><strong>داروها:</strong> ${Utils.escapeHtml(medsStr)}</div>
+          </div>
+          <div class="btn-group mt-1">
+            <button class="btn btn-outline btn-sm" onclick="App.viewEncounter('${e.id}')">مشاهده</button>
+            <button class="btn btn-secondary btn-sm" onclick="App.printEncounter('${e.id}')">چاپ</button>
+          </div>
+        </div>`;
+      }).join('');
+      return;
+    }
+
+    // Linear table view (default)
+    const dateFrom = document.getElementById('rep_dateFrom')?.value || '—';
+    const dateTo = document.getElementById('rep_dateTo')?.value || '—';
+    const ccF = document.getElementById('rep_cc')?.value || 'همه';
+    const dxF = document.getElementById('rep_dx')?.value || 'همه';
+    const uniqueCount = new Set(filtered.map(e => e.patientId).filter(Boolean)).size;
+
+    let html = `<div class="rep-linear-meta">
+      از <strong>${Utils.escapeHtml(dateFrom)}</strong> تا <strong>${Utils.escapeHtml(dateTo)}</strong>
+      · شکایت: <strong>${Utils.escapeHtml(ccF)}</strong>
+      · تشخیص: <strong>${Utils.escapeHtml(dxF)}</strong>
+      · مراجعات: <strong>${filtered.length}</strong>
+      · بیماران: <strong>${uniqueCount}</strong>
+    </div>
+    <table class="rep-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>تاریخ</th>
+          <th>بیمار</th>
+          <th>پرونده</th>
+          <th>شکایت</th>
+          <th>تشخیص</th>
+          <th>داروها</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>`;
+    filtered.forEach((e, i) => {
+      const p = patientMap[e.patientId] || {};
+      const name = `${p.firstName || ''} ${p.lastName || ''}`.trim() || '—';
+      const meds = (e.medications || []).map(m => m.name).filter(Boolean).join('، ') || '—';
+      html += `<tr>
+        <td style="text-align:center">${i + 1}</td>
+        <td style="white-space:nowrap">${Utils.escapeHtml(e.date || '')}${e.time ? '<br><span class="text-muted">' + Utils.escapeHtml(e.time) + '</span>' : ''}</td>
+        <td><span class="rep-link" onclick="App.openPatient('${e.patientId}')">${Utils.escapeHtml(name)}</span></td>
+        <td style="text-align:center">${Utils.escapeHtml(p.fileNumber || '—')}</td>
+        <td>${Utils.escapeHtml(e.cc || '—')}</td>
+        <td>${Utils.escapeHtml(e.dxPrimary || '—')}</td>
+        <td>${Utils.escapeHtml(meds)}</td>
+        <td style="white-space:nowrap">
+          <button class="btn btn-outline btn-sm" onclick="App.viewEncounter('${e.id}')">مشاهده</button>
+        </td>
+      </tr>`;
+    });
+    html += '</tbody></table>';
+    box.innerHTML = html;
+  },
+
+  async exportReportCSV() {
+    const filtered = this._reportFilteredEncs || [];
+    if (!filtered.length) {
+      toast('داده‌ای برای خروجی وجود ندارد', 'warning');
+      return;
+    }
+    const patientMap = {};
+    for (const e of filtered) {
+      if (e.patientId && !patientMap[e.patientId]) {
+        patientMap[e.patientId] = await PatientService.get(e.patientId);
+      }
+    }
+    const rows = [
+      ['تاریخ', 'ساعت', 'نام بیمار', 'کد ملی', 'شماره پرونده', 'شکایت اصلی', 'تشخیص اصلی', 'تشخیص همراه', 'کد ICD', 'داروها', 'توصیه', 'پیگیری'].join(',')
+    ];
+    filtered.forEach(e => {
+      const p = patientMap[e.patientId] || {};
+      const name = `${p.firstName || ''} ${p.lastName || ''}`.trim();
+      const meds = (e.medications || []).map(m => `${m.name || ''} ${m.dose || ''}`.trim()).filter(Boolean).join(' | ');
+      const esc = (s) => {
+        s = String(s || '');
+        if (s.includes(',') || s.includes('"') || s.includes('\n')) return '"' + s.replace(/"/g, '""') + '"';
+        return s;
+      };
+      rows.push([
+        esc(e.date), esc(e.time), esc(name), esc(p.nationalId), esc(p.fileNumber),
+        esc(e.cc), esc(e.dxPrimary), esc(e.dxSecondary), esc(e.icd),
+        esc(meds), esc(e.advice), esc(e.followup)
+      ].join(','));
+    });
+    // BOM for Excel Persian support
+    const bom = '\uFEFF';
+    const blob = new Blob([bom + rows.join('\n')], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const from = document.getElementById('rep_dateFrom')?.value || 'all';
+    const to = document.getElementById('rep_dateTo')?.value || 'all';
+    a.download = `report-${from.replace(/\//g,'-')}_to_${to.replace(/\//g,'-')}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast('فایل CSV دانلود شد', 'success');
+  },
+
+  async printReportLinear() {
+    const filtered = this._reportFilteredEncs || [];
+    if (!filtered.length) {
+      toast('داده‌ای برای چاپ وجود ندارد', 'warning');
+      return;
+    }
+    const patientMap = {};
+    for (const e of filtered) {
+      if (e.patientId && !patientMap[e.patientId]) {
+        patientMap[e.patientId] = await PatientService.get(e.patientId);
+      }
+    }
+    const dateFrom = document.getElementById('rep_dateFrom')?.value || '—';
+    const dateTo = document.getElementById('rep_dateTo')?.value || '—';
+    const ccF = document.getElementById('rep_cc')?.value || 'همه';
+    const dxF = document.getElementById('rep_dx')?.value || 'همه';
+    const uniquePatients = new Set(filtered.map(e => e.patientId).filter(Boolean));
+
+    let html = `
+      <div style="font-family:Tahoma,sans-serif;direction:rtl;text-align:right">
+      <h2 style="text-align:center;margin-bottom:4px">گزارش خطی مراجعات</h2>
+      <p style="text-align:center;font-size:0.85rem;color:#555;margin-bottom:12px">
+        از ${Utils.escapeHtml(dateFrom)} تا ${Utils.escapeHtml(dateTo)}
+        · شکایت: ${Utils.escapeHtml(ccF)} · تشخیص: ${Utils.escapeHtml(dxF)}
+      </p>
+      <p style="font-size:0.9rem;margin-bottom:12px">
+        تعداد مراجعات: <strong>${filtered.length}</strong>
+        · بیماران یکتا: <strong>${uniquePatients.size}</strong>
+        · تاریخ چاپ: ${Jalali.todayStr()}
+      </p>
+      <table style="width:100%;border-collapse:collapse;font-size:0.8rem">
+        <thead>
+          <tr style="background:#0d9488;color:#fff">
+            <th style="border:1px solid #ccc;padding:6px;width:28px">#</th>
+            <th style="border:1px solid #ccc;padding:6px">تاریخ</th>
+            <th style="border:1px solid #ccc;padding:6px">بیمار</th>
+            <th style="border:1px solid #ccc;padding:6px">پرونده</th>
+            <th style="border:1px solid #ccc;padding:6px">شکایت</th>
+            <th style="border:1px solid #ccc;padding:6px">تشخیص</th>
+            <th style="border:1px solid #ccc;padding:6px">داروها</th>
+          </tr>
+        </thead>
+        <tbody>`;
+    filtered.forEach((e, i) => {
+      const p = patientMap[e.patientId] || {};
+      const name = `${p.firstName || ''} ${p.lastName || ''}`.trim() || '—';
+      const meds = (e.medications || []).map(m => m.name).filter(Boolean).join('، ') || '—';
+      const bg = i % 2 === 0 ? '#f8fafc' : '#fff';
+      html += `<tr style="background:${bg}">
+        <td style="border:1px solid #ccc;padding:5px;text-align:center">${i + 1}</td>
+        <td style="border:1px solid #ccc;padding:5px">${Utils.escapeHtml(e.date || '')}${e.time ? ' ' + Utils.escapeHtml(e.time) : ''}</td>
+        <td style="border:1px solid #ccc;padding:5px">${Utils.escapeHtml(name)}</td>
+        <td style="border:1px solid #ccc;padding:5px;text-align:center">${Utils.escapeHtml(p.fileNumber || '—')}</td>
+        <td style="border:1px solid #ccc;padding:5px">${Utils.escapeHtml(e.cc || '—')}</td>
+        <td style="border:1px solid #ccc;padding:5px">${Utils.escapeHtml(e.dxPrimary || '—')}</td>
+        <td style="border:1px solid #ccc;padding:5px">${Utils.escapeHtml(meds)}</td>
+      </tr>`;
+    });
+    html += `</tbody></table>
+      <p style="margin-top:24px;font-size:0.75rem;color:#666;text-align:center">پرونده الکترونیک مطب — گزارش خطی</p>
+      </div>`;
+    this.doPrint(html);
+  },
+
+  /* ---- Print ---- */
+  async printPatientSummary() {
+    const p = await PatientService.get(this.currentPatientId);
+    const encs = await EncounterService.byPatient(this.currentPatientId);
+    const age = p.birthDate ? Jalali.ageFromJalali(p.birthDate) : p.age;
+    let html = `
+      <h2 style="text-align:center">خلاصه پرونده پزشکی</h2>
+      <hr>
+      <p><strong>نام:</strong> ${Utils.escapeHtml(p.firstName + ' ' + p.lastName)} &nbsp; <strong>سن:</strong> ${age||'—'} &nbsp; <strong>جنسیت:</strong> ${Utils.genderLabel(p.gender)}</p>
+      <p><strong>شماره پرونده:</strong> ${p.fileNumber||'—'} &nbsp; <strong>کد ملی:</strong> ${Utils.escapeHtml(p.nationalId||'—')}</p>
+      <p><strong>موبایل:</strong> ${Utils.escapeHtml(p.mobile||'—')} &nbsp; <strong>گروه خونی:</strong> ${p.bloodType||'—'}</p>
+      <p><strong>حساسیت‌ها:</strong> ${Utils.escapeHtml(p.allergies||'ندارد')}</p>
+      <p><strong>بیماری‌های زمینه‌ای:</strong> ${Utils.escapeHtml(p.chronic||'—')}</p>
+      <h3>آخرین مراجعات</h3>`;
+    encs.slice(0, 5).forEach(e => {
+      html += `<p><strong>${e.date}</strong> — ${Utils.escapeHtml(e.cc)} → ${Utils.escapeHtml(e.dxPrimary||'')}</p>`;
+    });
+    html += `<p style="margin-top:40px;font-size:0.8rem;color:#666">چاپ شده در ${Jalali.todayStr()} — پرونده الکترونیک مطب</p>`;
+    this.doPrint(html);
+  },
+
+  async printEncounter(id) {
+    const e = await EncounterService.get(id);
+    const p = await PatientService.get(e.patientId);
+    let html = `
+      <h2 style="text-align:center">گزارش مراجعه</h2>
+      <hr>
+      <p><strong>بیمار:</strong> ${Utils.escapeHtml(p.firstName + ' ' + p.lastName)} · ${p.fileNumber||''}</p>
+      <p><strong>تاریخ:</strong> ${e.date} ${e.time||''}</p>
+      <p><strong>علت مراجعه:</strong> ${Utils.escapeHtml(e.cc)}</p>
+      <p><strong>شرح حال:</strong> ${Utils.escapeHtml(e.hpi||'—')}</p>
+      <p><strong>علائم حیاتی:</strong> BP: ${e.vitals?.bp||'—'} · نبض: ${e.vitals?.pulse||'—'} · دما: ${e.vitals?.temp||'—'} · SpO2: ${e.vitals?.spo2||'—'} · وزن: ${e.vitals?.weight||'—'} · قد: ${e.vitals?.height||'—'} · BMI: ${e.vitals?.bmi||'—'}</p>
+      <p><strong>معاینه:</strong> ${Utils.escapeHtml(e.exam||'—')}</p>
+      <p><strong>تشخیص:</strong> ${Utils.escapeHtml(e.dxPrimary)} ${e.icd ? '('+Utils.escapeHtml(e.icd)+')' : ''}</p>
+      <p><strong>تشخیص‌های همراه:</strong> ${Utils.escapeHtml(e.dxSecondary||'—')}</p>
+      <p><strong>برنامه درمانی:</strong> ${Utils.escapeHtml(e.plan||'—')}</p>
+      <p><strong>توصیه‌ها:</strong> ${Utils.escapeHtml(e.advice||'—')}</p>
+      <p><strong>مراجعه بعدی:</strong> ${Utils.escapeHtml(e.followup||'—')}</p>
+      <p style="margin-top:40px">امضای پزشک: ........................</p>`;
+    this.doPrint(html);
+  },
+
+  async printPrescription(id) {
+    const e = await EncounterService.get(id);
+    const p = await PatientService.get(e.patientId);
+    let html = `
+      <h2 style="text-align:center">نسخه دارویی</h2>
+      <hr>
+      <p><strong>بیمار:</strong> ${Utils.escapeHtml(p.firstName + ' ' + p.lastName)} · سن: ${p.birthDate ? Jalali.ageFromJalali(p.birthDate) : p.age||'—'}</p>
+      <p><strong>تاریخ:</strong> ${e.date}</p>
+      <p><strong>تشخیص:</strong> ${Utils.escapeHtml(e.dxPrimary||'')}</p>
+      <hr>
+      <ol>`;
+    (e.medications || []).forEach(m => {
+      html += `<li style="margin-bottom:12px"><strong>${Utils.escapeHtml(m.name)}</strong> ${Utils.escapeHtml(m.form||'')} ${Utils.escapeHtml(m.dose||'')} — تعداد: ${Utils.escapeHtml(m.qty||'—')}<br>
+        ${Utils.escapeHtml(m.freq||'')} · ${Utils.escapeHtml(m.route||'')} · ${Utils.escapeHtml(m.duration||'')}<br>
+        <em>${Utils.escapeHtml(m.instruction||'')}</em></li>`;
+    });
+    html += `</ol><hr><p style="margin-top:30px">امضای پزشک: ........................</p>`;
+    this.doPrint(html);
+  },
+
+  doPrint(html) {
+    const area = document.getElementById('printArea');
+    area.innerHTML = html;
+    area.classList.remove('hidden');
+    window.print();
+    setTimeout(() => area.classList.add('hidden'), 500);
+  },
+
+  /* ---- List Manager (Settings) ---- */
+  renderListManager() {
+    const keySel = document.getElementById('listMgrKey');
+    if (!keySel) return;
+    const keys = Object.keys(ListConfig.LABELS);
+    const currentKey = keySel.value || keys[0];
+    if (!keySel.options.length || keySel.options.length !== keys.length) {
+      keySel.innerHTML = keys.map(k =>
+        `<option value="${k}">${Utils.escapeHtml(ListConfig.LABELS[k])}</option>`
+      ).join('');
+    }
+    if (currentKey && ListConfig.LABELS[currentKey]) keySel.value = currentKey;
+    const key = keySel.value;
+    const items = ListConfig.get(key);
+    const box = document.getElementById('listMgrItems');
+    if (!items.length) {
+      box.innerHTML = '<div class="text-muted text-center" style="padding:12px">لیست خالی است</div>';
+      return;
+    }
+    box.innerHTML = items.map((item, idx) => `
+      <div class="file-item" style="margin-bottom:6px">
+        <span class="file-name" style="flex:1">${Utils.escapeHtml(item)}</span>
+        <button type="button" class="btn btn-outline btn-sm" onclick="App.moveListItem('${key}',${idx},-1)" title="بالا" ${idx===0?'disabled':''}>↑</button>
+        <button type="button" class="btn btn-outline btn-sm" onclick="App.moveListItem('${key}',${idx},1)" title="پایین" ${idx===items.length-1?'disabled':''}>↓</button>
+        <button type="button" class="btn btn-danger btn-sm" onclick="App.removeListItem('${key}',${idx})">حذف</button>
+      </div>`).join('');
+  },
+
+  async addListItem() {
+    const key = document.getElementById('listMgrKey').value;
+    const input = document.getElementById('listMgrNewItem');
+    const val = (input.value || '').trim();
+    if (!val) { toast('متن آیتم را وارد کنید', 'warning'); return; }
+    const ok = await ListConfig.addItem(key, val);
+    if (!ok) { toast('این آیتم قبلاً وجود دارد', 'warning'); return; }
+    input.value = '';
+    this.renderListManager();
+    ListConfig.populateAllFormSelects();
+    toast('آیتم اضافه شد', 'success');
+  },
+
+  async removeListItem(key, idx) {
+    const items = ListConfig.get(key);
+    const item = items[idx];
+    if (!item) return;
+    if (!confirm('حذف «' + item + '»؟')) return;
+    await ListConfig.removeItem(key, item);
+    this.renderListManager();
+    ListConfig.populateAllFormSelects();
+    toast('حذف شد', 'success');
+  },
+
+  async moveListItem(key, idx, dir) {
+    const items = [...ListConfig.get(key)];
+    const j = idx + dir;
+    if (j < 0 || j >= items.length) return;
+    [items[idx], items[j]] = [items[j], items[idx]];
+    await ListConfig.set(key, items);
+    this.renderListManager();
+    ListConfig.populateAllFormSelects();
+  },
+
+  async resetCurrentList() {
+    const key = document.getElementById('listMgrKey').value;
+    if (!confirm('بازنشانی «' + ListConfig.LABELS[key] + '» به مقادیر پیش‌فرض؟')) return;
+    await ListConfig.reset(key);
+    this.renderListManager();
+    ListConfig.populateAllFormSelects();
+    toast('بازنشانی شد', 'success');
+  },
+
+  async resetAllLists() {
+    if (!confirm('همه لیست‌ها به مقادیر پیش‌فرض برگردند؟')) return;
+    await ListConfig.resetAll();
+    this.renderListManager();
+    ListConfig.populateAllFormSelects();
+    toast('همه لیست‌ها بازنشانی شدند', 'success');
+  },
+
+  /* ---- Settings ---- */
+  async setPin() {
+    const pin = document.getElementById('set_pin').value;
+    if (!/^\d{4,6}$/.test(pin)) { toast('PIN باید ۴ تا ۶ رقم باشد', 'error'); return; }
+    await AuthService.setPin(pin);
+    document.getElementById('set_pin').value = '';
+    toast('PIN ذخیره شد', 'success');
+  },
+
+  async saveSettings() {
+    AuthService.lockTimeoutMin = parseInt(document.getElementById('set_lockTimeout').value) || 5;
+    const s = await DB.get('settings', 'auth') || { key: 'auth' };
+    s.lockTimeout = AuthService.lockTimeoutMin;
+    s.pinHash = AuthService.pinHash;
+    await DB.put('settings', s);
+    toast('تنظیمات ذخیره شد', 'success');
+  },
+
+  async exportBackup() {
+    showLoading(true);
+    try {
+      const data = await BackupService.exportAll();
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `clinic-backup-${Jalali.todayStr().replace(/\//g,'-')}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      toast('فایل پشتیبان دانلود شد', 'success');
+    } catch (e) {
+      toast('خطا در پشتیبان‌گیری', 'error');
+    }
+    showLoading(false);
+  },
+
+  async importBackup(ev) {
+    const file = ev.target.files[0];
+    if (!file) return;
+    showModal(`
+      <div class="modal-header"><h2>⚠️ هشدار بازیابی</h2><button class="modal-close" onclick="App.closeModal()">×</button></div>
+      <p>با بازیابی، <strong>تمام اطلاعات فعلی حذف</strong> و با محتوای فایل جایگزین می‌شود. این عمل غیرقابل بازگشت است.</p>
+      <p>آیا ادامه می‌دهید؟</p>
+      <div class="btn-group mt-2">
+        <button class="btn btn-danger btn-block" id="confirmImportBtn">بله، بازیابی کن</button>
+        <button class="btn btn-outline btn-block" onclick="App.closeModal()">انصراف</button>
+      </div>`);
+    document.getElementById('confirmImportBtn').onclick = async () => {
+      showLoading(true);
+      try {
+        const text = await file.text();
+        const data = JSON.parse(text);
+        await BackupService.importAll(data);
+        await AuthService.load();
+        await ListConfig.load();
+        ListConfig.populateAllFormSelects();
+        this.closeModal();
+        toast('بازیابی با موفقیت انجام شد', 'success');
+        this.navigate('dashboard');
+      } catch (e) {
+        toast('خطا در بازیابی: ' + e.message, 'error');
+      }
+      showLoading(false);
+      ev.target.value = '';
+    };
+  },
+
+  async loadSampleData() {
+    showLoading(true);
+    const samples = [
+      {
+        firstName: 'علی', lastName: 'محمدی', nationalId: '0012345678', gender: 'male',
+        birthDate: '1365/03/15', mobile: '09121234567', bloodType: 'A+',
+        allergies: 'پنی‌سیلین', chronic: 'فشار خون', smoking: 'no', alcohol: 'no'
+      },
+      {
+        firstName: 'زهرا', lastName: 'احمدی', nationalId: '0012345679', gender: 'female',
+        birthDate: '1372/08/20', mobile: '09129876543', bloodType: 'O+',
+        allergies: '', chronic: 'آسم', smoking: 'no', alcohol: 'no'
+      },
+      {
+        firstName: 'رضا', lastName: 'کریمی', nationalId: '0012345680', gender: 'male',
+        birthDate: '1358/11/02', mobile: '09351234567', bloodType: 'B+',
+        allergies: 'آسپرین', chronic: 'دیابت نوع ۲', smoking: 'former', alcohol: 'no'
+      }
+    ];
+    for (const s of samples) {
+      s.age = Jalali.ageFromJalali(s.birthDate);
+      const p = await PatientService.save(s);
+      await EncounterService.save({
+        patientId: p.id,
+        date: Jalali.todayStr(),
+        time: '10:30',
+        cc: 'سردرد و ضعف',
+        hpi: 'از دو روز پیش سردرد و ضعف عمومی',
+        dxPrimary: 'عفونت ویروسی',
+        vitals: { bp: '120/80', pulse: '78', temp: '37.2', spo2: '98', weight: '75', height: '175', bmi: '24.5' },
+        medications: [{ name: 'استامینوفن', form: 'قرص', dose: '500mg', qty: '20', freq: 'هر ۶ ساعت', route: 'خوراکی', duration: '۵ روز', instruction: 'بعد از غذا' }]
+      });
+    }
+    await AppointmentService.save({
+      date: Jalali.todayStr(), time: '11:00', patientName: 'علی محمدی', reason: 'پیگیری', status: 'booked'
+    });
+    toast('داده‌های نمونه بارگذاری شد', 'success');
+    this.refreshDashboard();
+    showLoading(false);
+  }
+};
+
+/* Helpers */
+function toast(msg, type = '') {
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+function showLoading(v) {
+  document.getElementById('loadingOverlay').classList.toggle('show', v);
+}
+function showModal(html) {
+  document.getElementById('modalContent').innerHTML = html;
+  document.getElementById('modalOverlay').classList.add('show');
+}
+App.closeModal = function() {
+  document.getElementById('modalOverlay').classList.remove('show');
+};
+
+/* Boot */
+document.addEventListener('DOMContentLoaded', () => App.init());
+</script>
+</body>
+</html>
